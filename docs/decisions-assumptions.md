@@ -10,7 +10,10 @@
 - Backed by a PostgreSQL DB
 
 ### Limitations
-- 
+- Setting up testing environments/branching policies
+  - Single dev for a very short term project
 
 ### Architecture
-- 
+- Onion!
+  - Dependencies flowing inward, inner layers having no knowledge of outer layers
+  - 

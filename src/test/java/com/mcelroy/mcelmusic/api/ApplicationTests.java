@@ -1,4 +1,4 @@
-package com.example.mcelmusic.api;
+package com.mcelroy.mcelmusic.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.example.mcelmusic.api;
+package com.mcelroy.mcelmusic.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
