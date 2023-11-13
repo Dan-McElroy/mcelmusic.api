@@ -6,3 +6,171 @@ info:
   description: Music Metadata Service for ICE Services application
 
 paths:
+  /track/{trackId}:
+    parameters:
+      - in: path
+        name: trackId
+        description: The ID of the track, which must already exist.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Tracks
+      summary: Get Track By ID
+      description: Gets information about a track by ID
+      responses:
+        '200':
+          description: Track found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+    patch:
+      tags:
+        - Tracks
+      summary: Update Track
+      description: Update the metadata for a particular track
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Breathe (In The Air)"
+                artists:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                genreId:
+                  type: string
+                  format: uuid
+                lengthSeconds:
+                  type: integer
+                  minimum: 1
+                  example: 169
+                albumId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Track updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+  /track:
+    put:
+      tags:
+        - Tracks
+      summary: Add Track
+      description: Adds a track to the metadata service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - artists
+                - lengthSeconds
+                - albumId
+              properties:
+                title:
+                  type: string
+                  example: "Breathe (In The Air)"
+                artists:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                genreId:
+                  type: string
+                  format: uuid
+                lengthSeconds:
+                  type: integer
+                  minimum: 1
+                  example: 169
+                albumId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Track created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Track'
+
+components:
+  schemas:
+    Track:
+      type: object
+      required:
+        - id
+        - version
+        - title
+        - artists
+        - genreId
+        - lengthSeconds
+        - albumId
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          description: The latest known version of the track record. Used to
+            detect conflicts between concurrent updates.
+        title:
+          type: string
+          example: "Breathe (In The Air)"
+        artists:
+          type: array
+          items:
+            type: string
+            format: uuid
+        genreId:
+          type: string
+          format: uuid
+        lengthSeconds:
+          type: integer
+          minimum: 1
+          example: 169
+        albumId:
+          type: string
+          format: uuid
+    Artist:
+      type: object
+      required:
+        - id
+        - version
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          description: The latest known version of the artist record. Used to
+            detect conflicts between concurrent updates.
+        name:
+          type: string
+          description: The primary name of the artist.
+          example: Pink Floyd
+        aliases:
+          type: array
+          description: A list of aliases the artist is known by.
+          items:
+            type: string
+        profilePictureUrl:
+          type: string
+          description: The location of the artist's profile picture.
+          format: url
+

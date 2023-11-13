@@ -12,8 +12,19 @@
 ### Limitations
 - Setting up testing environments/branching policies
   - Single dev for a very short term project
+- Storage solution for profile pictures
 
 ### Architecture
 - Onion!
   - Dependencies flowing inward, inner layers having no knowledge of outer layers
-  - 
+- API
+  - /track PUT
+
+### Data Model
+- Genre Objects with IDs
+- Multiple artists per track (collaborations)
+- Stretch goal: Albums (TODO: find more generic term)
+  - Album artists = "distinct" collection of song artists in album?
+    - But maybe also a primary artist?
+  - Track number within album
+- Versioned objects to protect against updates out of sync
