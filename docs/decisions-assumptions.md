@@ -28,3 +28,6 @@
     - But maybe also a primary artist?
   - Track number within album
 - Versioned objects to protect against updates out of sync
+
+### Outstanding Decisions
+- Should Artist of the Day return just artist, or also some songs?

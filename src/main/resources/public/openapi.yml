@@ -38,7 +38,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - version
               properties:
+                version:
+                  type: integer
+                  minimum: 0
+                  description: The latest known version of the track record. Used to
+                    detect conflicts between concurrent updates.
                 title:
                   type: string
                   example: "Breathe (In The Air)"
@@ -64,11 +71,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+        '404':
+          description: Track not found
+        '409':
+          description: Track version conflict
+    delete:
+      tags:
+        - Tracks
+      summary: Delete Track
+      description: Delete an existing track
+      responses:
+        '204':
+          description: Track deleted successfully
+        '404':
+          description: Track not found
+        '409':
+          description: Track version conflict
   /track:
     put:
       tags:
         - Tracks
-      summary: Add Track
+      summary: Create Track
       description: Adds a track to the metadata service
       requestBody:
         required: true
@@ -107,6 +130,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+  /artist/{artistId}:
+    parameters:
+      - in: path
+        name: artistId
+        description: The ID of the artist, which must already exist.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Artists
+      summary: Get Artist By ID
+      description: Gets information about an artist by ID
+      responses:
+        '200':
+          description: Artist found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '404':
+          description: Artist not found
+    patch:
+      tags:
+        - Artists
+      summary: Update Artist
+
+    delete:
+      tags:
+        - Artists
+      summary: Delete Artist
+      description: Deletes an artist from the metadata service.
+      responses:
+        '204':
+          description: Artist deleted successfully
+        '404':
+          description: Artist not found
+  /artist:
+    put:
+      tags:
+        - Artists
+      summary: Create Artists
+      description: Adds an artist to the metadata service.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: The name of the artist.
+                  example: "Breathe (In The Air)"
+                aliases:
+                  type: array
+                  description: A list of aliases the artist is known by.
+                  items:
+                    type: string
+                profilePictureUrl:
+                  type: string
+                  description: The location of the artist's profile picture.
+                  format: url
+      responses:
+        '200':
+          description: Artist created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+  /artist/today:
+    get:
+      tags:
+        - Artists
+      summary: Get Artist of the Day
+      description: Gets the Artist of the Day for the current date in local time.
+      responses:
+        '200':
+          description: Artist of the Day found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '404':
+          description: No artists found in the metadata service
 
 components:
   schemas:
