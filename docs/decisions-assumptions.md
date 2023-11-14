@@ -13,6 +13,7 @@
 - Setting up testing environments/branching policies
   - Single dev for a very short term project
 - Storage solution for profile pictures
+- More parameter annotations (mins, maxes, expected String formats)
 
 ### Architecture
 - Onion!
@@ -31,3 +32,6 @@
 
 ### Outstanding Decisions
 - Should Artist of the Day return just artist, or also some songs?
+- Should updating aliases of artist be handled differently?
+  - Maybe one endpoint for patching Main Name, profile pic etc.
+  - And one for Create-Read-Delete on aliases

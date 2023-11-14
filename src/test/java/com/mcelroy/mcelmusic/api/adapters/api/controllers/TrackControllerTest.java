@@ -4,17 +4,20 @@ import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
-@WebFluxTest(TrackController.class)
+@WebFluxTest(value = TrackController.class, excludeAutoConfiguration = {ReactiveSecurityAutoConfiguration.class})
+@ActiveProfiles("test")
 public class TrackControllerTest {
 
     @Autowired
-    private WebTestClient client;
+    private WebTestClient webTestClient;
 
     @Test
     void givenValidTrackCreationParams_whenCreatingTrack_thenReturnOk() {
@@ -33,7 +36,7 @@ public class TrackControllerTest {
                  .lengthSeconds(60)
                  .genreId("Test genre ID")
                  .build();
-         client.put()
+        webTestClient.put()
                  .uri("/track")
                  .accept(MediaType.APPLICATION_JSON)
                  .contentType(MediaType.APPLICATION_JSON)
@@ -43,5 +46,15 @@ public class TrackControllerTest {
                  .isOk()
                  .expectBody(Track.class)
                  .isEqualTo(expectedTrack);
+    }
+
+    @Test
+    void givenANonExistingTrackId_whenDeletingATrack_thenReturnNotFound() {
+        webTestClient.delete()
+                .uri("/track/isdifjis")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
     }
 }

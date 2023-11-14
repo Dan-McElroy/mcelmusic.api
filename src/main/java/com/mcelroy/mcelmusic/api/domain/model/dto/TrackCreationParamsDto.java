@@ -7,14 +7,10 @@ import java.util.List;
 
 @Builder
 public record TrackCreationParamsDto(
-        @Nullable
         String title,
-        @Nullable
         List<String> artistIds,
         @Nullable
         String genreId,
-        @Nullable
         Integer lengthSeconds,
-        @Nullable
         String albumId) {
 }
