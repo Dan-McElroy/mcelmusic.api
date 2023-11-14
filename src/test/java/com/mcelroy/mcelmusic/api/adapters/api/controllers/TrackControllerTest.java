@@ -44,6 +44,7 @@ class TrackControllerTest {
                  .artists(List.of("Artist ID 1", "Artist ID 2"))
                  .lengthSeconds(60)
                  .genreId("Test genre ID")
+                 .version(1)
                  .build();
 
         client.put()
@@ -81,6 +82,7 @@ class TrackControllerTest {
     void givenExistingTrack_whenGettingTrack_thenReturnTrack() {
         var expectedTrack = Track.builder()
                 .id("ExistingID")
+                .version(2)
                 .title("Test track")
                 .albumId("Test album ID")
                 .artists(List.of("Artist ID 1", "Artist ID 2"))

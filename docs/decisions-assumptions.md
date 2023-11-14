@@ -25,6 +25,7 @@
 ### Data Model
 - Genre Objects with IDs
 - Multiple artists per track (collaborations)
+  - If artist deleted and track has no other artists, track deleted
 - Stretch goal: Albums (TODO: find more generic term)
   - Album artists = "distinct" collection of song artists in album?
     - But maybe also a primary artist?

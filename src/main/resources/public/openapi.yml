@@ -204,7 +204,7 @@ paths:
     put:
       tags:
         - Artists
-      summary: Create Artists
+      summary: Create Artist
       description: Adds an artist to the metadata service.
       requestBody:
         required: true
@@ -235,6 +235,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Artist'
+        '400':
+          description: Invalid parameters
   /artist/today:
     get:
       tags:
