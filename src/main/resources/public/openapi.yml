@@ -27,6 +27,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+        '404':
+          description: Track not found
     patch:
       tags:
         - Tracks
@@ -48,7 +50,7 @@ paths:
                     detect conflicts between concurrent updates.
                 title:
                   type: string
-                  example: "Breathe (In The Air)"
+                  example: Breathe (In The Air)
                 artists:
                   type: array
                   items:
@@ -85,8 +87,6 @@ paths:
           description: Track deleted successfully
         '404':
           description: Track not found
-        '409':
-          description: Track version conflict
   /track:
     put:
       tags:
@@ -107,7 +107,7 @@ paths:
               properties:
                 title:
                   type: string
-                  example: "Breathe (In The Air)"
+                  example: Breathe (In The Air)
                 artists:
                   type: array
                   items:
@@ -130,6 +130,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+        '400':
+          description: Invalid parameters
   /artist/{artistId}:
     parameters:
       - in: path
@@ -157,7 +159,37 @@ paths:
       tags:
         - Artists
       summary: Update Artist
-
+      description: Updates the metadata for a particular artist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: integer
+                  minimum: 0
+                  description: The latest known version of the artist record. Used to
+                    detect conflicts between concurrent updates.
+                name:
+                  type: string
+                  example: Pink Floyd
+                profilePictureUrl:
+                  type: string
+      responses:
+        '200':
+          description: Artist updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '404':
+          description: Artist not found
+        '409':
+          description: Artist version conflict
     delete:
       tags:
         - Artists
@@ -185,8 +217,8 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the artist.
-                  example: "Breathe (In The Air)"
+                  description: The primary name of the artist.
+                  example: Pink Floyd
                 aliases:
                   type: array
                   description: A list of aliases the artist is known by.
@@ -241,7 +273,7 @@ components:
             detect conflicts between concurrent updates.
         title:
           type: string
-          example: "Breathe (In The Air)"
+          example: Breathe (In The Air)
         artists:
           type: array
           items:

@@ -14,6 +14,7 @@
   - Single dev for a very short term project
 - Storage solution for profile pictures
 - More parameter annotations (mins, maxes, expected String formats)
+- Detailed error feedback, i.e. if bad parameters when creating track, which parameters?
 
 ### Architecture
 - Onion!
