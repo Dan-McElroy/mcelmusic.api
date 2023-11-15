@@ -33,11 +33,6 @@ class TrackControllerTest {
     @MockBean
     private TrackService trackService;
 
-    @BeforeEach
-    void setup() {
-        // TODO: set up mocks for service
-    }
-
     @Test
     void givenValidTrackCreationParams_whenCreatingTrack_thenReturnOk() {
          var trackCreationParams = TrackCreationParamsDto.builder()
@@ -49,6 +44,7 @@ class TrackControllerTest {
                  .build();
 
          var expectedTrack = Track.builder()
+                 .id("CreatedID")
                  .title("Test track")
                  .albumId("Test album ID")
                  .artistIds(List.of("Artist ID 1", "Artist ID 2"))
@@ -82,7 +78,7 @@ class TrackControllerTest {
                 .build();
 
         given(trackService.createTrack(trackCreationParams))
-                .willReturn(Mono.error(InvalidParametersException.track(List.of("artists"))));
+                .willReturn(Mono.error(InvalidParametersException.track("artists")));
 
         client.put()
                 .uri("/track")
@@ -182,8 +178,6 @@ class TrackControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
                 .exchange()
-                .expectStatus()
-                .isOk()
                 .expectStatus()
                 .isNotFound();
     }

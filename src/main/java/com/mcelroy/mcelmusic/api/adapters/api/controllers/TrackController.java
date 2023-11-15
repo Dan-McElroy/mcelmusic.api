@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono;
  * @see "API docs: src/main/resources/public/openapi.yml"
  */
 @RestController
-@RequestMapping("/track")
 @AllArgsConstructor
+@RequestMapping("/track")
 public class TrackController {
 
     private final TrackService trackService;
