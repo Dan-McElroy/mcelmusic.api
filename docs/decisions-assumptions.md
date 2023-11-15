@@ -16,6 +16,7 @@
 - More parameter annotations (mins, maxes, expected String formats)
 - Detailed error feedback, i.e. if bad parameters when creating track, which parameters?
   - Existing error handling feels overengineered, unmaintainable
+- Parameter checks and failures in data model
 
 ### Architecture
 - Onion!

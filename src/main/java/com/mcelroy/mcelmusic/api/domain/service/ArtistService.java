@@ -25,7 +25,8 @@ public class ArtistService {
     }
 
     public Mono<Artist> getArtist(String artistId) {
-        return artistRepository.findBy(artistId);
+        return artistRepository.findBy(artistId)
+                .switchIfEmpty(handleNotFound());
     }
 
     public Mono<Artist> getArtistOfTheDay(Instant currentTime) {
