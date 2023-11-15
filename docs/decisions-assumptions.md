@@ -38,3 +38,4 @@
 - Should updating aliases of artist be handled differently?
   - Maybe one endpoint for patching Main Name, profile pic etc.
   - And one for Create-Read-Delete on aliases
+- Should delete return error for non-existing IDs, or just a different success code?

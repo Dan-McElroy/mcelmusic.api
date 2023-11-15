@@ -1,6 +1,5 @@
 package com.mcelroy.mcelmusic.api.domain.service;
 
-import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackUpdateParamsDto;
@@ -24,11 +23,12 @@ public class TrackService {
     }
 
     public Mono<Track> getTrack(String trackId) {
-        return trackRepository.findById(trackId);
+        return trackRepository.findBy(trackId)
+                .switchIfEmpty(handleNotFound());
     }
 
     public Mono<Track> updateTrack(String trackId, TrackUpdateParamsDto update) {
-        return trackRepository.findById(trackId)
+        return trackRepository.findBy(trackId)
                 .switchIfEmpty(handleNotFound())
                 .filter(track -> track.getVersion() == update.version())
                 .switchIfEmpty(Mono.error(VersionConflictException.track()))
@@ -38,6 +38,7 @@ public class TrackService {
                         .title(update.title() != null ? update.title() : track.getTitle())
                         .artistIds(update.artistIds() != null ? update.artistIds() : track.getArtistIds())
                         .genreId(update.genreId() != null ? update.genreId() : track.getGenreId())
+                        .albumId(update.albumId() != null ? update.albumId() : track.getAlbumId())
                         .lengthSeconds(update.lengthSeconds() != null
                                 ? update.lengthSeconds()
                                 : track.getLengthSeconds())
@@ -46,7 +47,7 @@ public class TrackService {
     }
 
     public Mono<Void> deleteTrack(String trackId) {
-        return trackRepository.findById(trackId)
+        return trackRepository.findBy(trackId)
                 .switchIfEmpty(handleNotFound())
                 .flatMap(trackRepository::delete);
     }
