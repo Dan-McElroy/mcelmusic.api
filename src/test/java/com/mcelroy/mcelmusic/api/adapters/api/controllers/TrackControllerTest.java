@@ -3,17 +3,24 @@ package com.mcelroy.mcelmusic.api.adapters.api.controllers;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackUpdateParamsDto;
+import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
+import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
+import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
+import com.mcelroy.mcelmusic.api.domain.service.TrackService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @WebFluxTest(value = TrackController.class, excludeAutoConfiguration = {ReactiveSecurityAutoConfiguration.class})
@@ -22,6 +29,9 @@ class TrackControllerTest {
 
     @Autowired
     private WebTestClient client;
+
+    @MockBean
+    private TrackService trackService;
 
     @BeforeEach
     void setup() {
@@ -41,11 +51,14 @@ class TrackControllerTest {
          var expectedTrack = Track.builder()
                  .title("Test track")
                  .albumId("Test album ID")
-                 .artists(List.of("Artist ID 1", "Artist ID 2"))
+                 .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                  .lengthSeconds(60)
                  .genreId("Test genre ID")
                  .version(1)
                  .build();
+
+         given(trackService.createTrack(trackCreationParams))
+                 .willReturn(Mono.just(expectedTrack));
 
         client.put()
                  .uri("/track")
@@ -68,6 +81,9 @@ class TrackControllerTest {
                 .genreId("Test genre ID")
                 .build();
 
+        given(trackService.createTrack(trackCreationParams))
+                .willReturn(Mono.error(InvalidParametersException.track(List.of("artists"))));
+
         client.put()
                 .uri("/track")
                 .accept(MediaType.APPLICATION_JSON)
@@ -85,10 +101,13 @@ class TrackControllerTest {
                 .version(2)
                 .title("Test track")
                 .albumId("Test album ID")
-                .artists(List.of("Artist ID 1", "Artist ID 2"))
+                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                 .lengthSeconds(60)
                 .genreId("Test genre ID")
                 .build();
+
+        given(trackService.getTrack("ExistingID"))
+                .willReturn(Mono.just(expectedTrack));
 
         client.get()
                 .uri("/track/ExistingID")
@@ -102,6 +121,9 @@ class TrackControllerTest {
 
     @Test
     void givenNonExistingTrack_whenGettingTrack_thenReturnNotFound() {
+        given(trackService.getTrack("NonExistingID"))
+                .willReturn(Mono.error(NotFoundException.track()));
+
         client.get()
                 .uri("/track/NonExistingID")
                 .accept(MediaType.APPLICATION_JSON)
@@ -112,29 +134,25 @@ class TrackControllerTest {
 
     @Test
     void givenValidUpdateParameters_whenUpdatingTrack_thenReturnUpdatedTrack() {
-        var existingTrack = Track.builder()
-                .id("UpdateID")
-                .version(1)
-                .title("Test track")
-                .albumId("Test album ID")
-                .artists(List.of("Artist ID 1", "Artist ID 2"))
-                .lengthSeconds(60)
-                .genreId("Test genre ID")
-                .build();
         var updateParameters = TrackUpdateParamsDto.builder()
                 .genreId("New genre ID")
                 .title("New title")
                 .version(1)
                 .build();
+
         var expectedTrack = Track.builder()
                 .id("UpdateID")
                 .version(2)
                 .title("New title")
                 .albumId("Test album ID")
-                .artists(List.of("Artist ID 1", "Artist ID 2"))
+                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                 .lengthSeconds(60)
                 .genreId("New genre ID")
                 .build();
+
+        given(trackService.updateTrack("UpdateID", updateParameters))
+                .willReturn(Mono.just(expectedTrack));
+
         client.patch()
                 .uri("/track/UpdateID")
                 .accept(MediaType.APPLICATION_JSON)
@@ -149,20 +167,15 @@ class TrackControllerTest {
 
     @Test
     void givenNonExistingTrackId_whenUpdatingTrack_thenNotFound() {
-        var existingTrack = Track.builder()
-                .id("UpdateID")
-                .version(1)
-                .title("Test track")
-                .albumId("Test album ID")
-                .artists(List.of("Artist ID 1", "Artist ID 2"))
-                .lengthSeconds(60)
-                .genreId("Test genre ID")
-                .build();
         var updateParameters = TrackUpdateParamsDto.builder()
                 .genreId("New genre ID")
                 .title("New title")
                 .version(1)
                 .build();
+
+        given(trackService.updateTrack("NonExistingID", updateParameters))
+                .willReturn(Mono.error(NotFoundException.track()));
+
         client.patch()
                 .uri("/track/NonExistingID")
                 .accept(MediaType.APPLICATION_JSON)
@@ -177,20 +190,15 @@ class TrackControllerTest {
 
     @Test
     void givenInvalidVersion_whenUpdatingTrack_thenReturnConflict() {
-        var existingTrack = Track.builder()
-                .id("UpdateID")
-                .version(3)
-                .title("Test track")
-                .albumId("Test album ID")
-                .artists(List.of("Artist ID 1", "Artist ID 2"))
-                .lengthSeconds(60)
-                .genreId("Test genre ID")
-                .build();
         var updateParameters = TrackUpdateParamsDto.builder()
                 .genreId("New genre ID")
                 .title("New title")
                 .version(2)
                 .build();
+
+        given(trackService.updateTrack("UpdateID", updateParameters))
+                .willReturn(Mono.error(VersionConflictException.track()));
+
         client.patch()
                 .uri("/track/UpdateID")
                 .accept(MediaType.APPLICATION_JSON)
@@ -203,7 +211,10 @@ class TrackControllerTest {
 
     @Test
     void givenExistingTrack_whenDeletingTrack_thenReturnNoContent() {
-        // TODO: add existing track
+
+        given(trackService.deleteTrack("ToBeDeletedID"))
+                .willReturn(Mono.empty());
+
         client.delete()
                 .uri("/track/ToBeDeletedID")
                 .accept(MediaType.APPLICATION_JSON)
@@ -214,6 +225,9 @@ class TrackControllerTest {
 
     @Test
     void givenANonExistingTrackId_whenDeletingTrack_thenReturnNotFound() {
+
+        given(trackService.deleteTrack("ToBeDeletedID"))
+                .willReturn(Mono.error(NotFoundException.track()));
         client.delete()
                 .uri("/track/ToBeDeletedID")
                 .accept(MediaType.APPLICATION_JSON)

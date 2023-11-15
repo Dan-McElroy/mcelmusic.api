@@ -24,6 +24,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
