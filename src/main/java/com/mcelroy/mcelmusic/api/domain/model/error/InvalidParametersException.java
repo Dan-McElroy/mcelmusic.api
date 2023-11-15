@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.lang.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -16,14 +18,13 @@ public class InvalidParametersException extends RuntimeException {
 
     private final String reason;
 
-    @Nullable
-    private final List<String> invalidParameters;
+    private final Set<String> invalidParameters;
 
-    public static InvalidParametersException track(@Nullable List<String> invalidParameters) {
-        return new InvalidParametersException(INVALID_TRACK_PARAMETERS, invalidParameters);
+    public static InvalidParametersException track(String... invalidParameters) {
+        return new InvalidParametersException(INVALID_TRACK_PARAMETERS, Set.of(invalidParameters));
     }
 
-    public static InvalidParametersException artist(@Nullable List<String> invalidParameters) {
-        return new InvalidParametersException(INVALID_ARTIST_PARAMETERS, invalidParameters);
+    public static InvalidParametersException artist(String... invalidParameters) {
+        return new InvalidParametersException(INVALID_ARTIST_PARAMETERS, Set.of(invalidParameters));
     }
 }
