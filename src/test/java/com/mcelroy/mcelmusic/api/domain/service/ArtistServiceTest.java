@@ -18,6 +18,7 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -30,14 +31,6 @@ class ArtistServiceTest {
 
     @InjectMocks
     private ArtistService artistService;
-
-    /**
-     * Mono<Artist> createArtist(ArtistCreationParamsDto artistCreationParams)
-     * Mono<Artist> getArtist(String artistId)
-     * Mono<Artist> getArtistOfTheDay(Instant currentTime)
-     * Mono<Artist> updateArtist(String artistId, ArtistUpdateParamsDto update)
-     * Mono<Void> deleteArtist(String artistId)
-     */
     @Test
     void givenValidParams_whenCreatingArtist_thenReturnArtist() {
 
@@ -213,4 +206,13 @@ class ArtistServiceTest {
                 .expectError(NotFoundException.class)
                 .verify();
     }
+
+    @Test
+    void givenSeveralArtists_whenGettingArtistOfTheDay_rotateThroughArtists() {
+        // create 4 artists
+        // set up 5 Instants for 5 consecutive days
+        // call the service for each instance, assert that first(?) is called twice
+        fail();
+    }
+
 }
