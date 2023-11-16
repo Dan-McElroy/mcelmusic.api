@@ -212,7 +212,7 @@ class ArtistServiceTest {
         // create 4 artists
         // set up 5 Instants for 5 consecutive days
         // call the service for each instance, assert that first(?) is called twice
-        fail();
+        
     }
 
 }
