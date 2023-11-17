@@ -23,12 +23,13 @@ public class TrackService {
     }
 
     public Mono<Track> getTrack(String trackId) {
-        return trackRepository.findBy(trackId)
+        return trackRepository.findById(trackId)
                 .switchIfEmpty(handleNotFound());
     }
 
     public Mono<Track> updateTrack(String trackId, TrackUpdateParamsDto update) {
-        return trackRepository.findBy(trackId)
+        return trackRepository.findById(trackId)
+
                 .switchIfEmpty(handleNotFound())
                 .filter(track -> track.getVersion() == update.version())
                 .switchIfEmpty(Mono.error(VersionConflictException.track()))
@@ -47,7 +48,7 @@ public class TrackService {
     }
 
     public Mono<Void> deleteTrack(String trackId) {
-        return trackRepository.findBy(trackId)
+        return trackRepository.findById(trackId)
                 .switchIfEmpty(handleNotFound())
                 .flatMap(trackRepository::delete);
     }

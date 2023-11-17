@@ -25,7 +25,7 @@ public class ArtistService {
     }
 
     public Mono<Artist> getArtist(String artistId) {
-        return artistRepository.findBy(artistId)
+        return artistRepository.findById(artistId)
                 .switchIfEmpty(handleNotFound());
     }
 
@@ -35,7 +35,7 @@ public class ArtistService {
     }
 
     public Mono<Artist> updateArtist(String artistId, ArtistUpdateParamsDto update) {
-        return artistRepository.findBy(artistId)
+        return artistRepository.findById(artistId)
                 .switchIfEmpty(handleNotFound())
                 .filter(artist -> artist.getVersion() == update.version())
                 .switchIfEmpty(Mono.error(VersionConflictException.artist()))
@@ -54,7 +54,7 @@ public class ArtistService {
     }
 
     public Mono<Void> deleteArtist(String artistId) {
-        return artistRepository.findBy(artistId)
+        return artistRepository.findById(artistId)
                 .switchIfEmpty(handleNotFound())
                 .flatMap(artistRepository::delete);
     }

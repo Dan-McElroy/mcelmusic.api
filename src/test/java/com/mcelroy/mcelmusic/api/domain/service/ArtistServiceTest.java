@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -81,7 +80,7 @@ class ArtistServiceTest {
                 .profilePictureUrl("http://test.com")
                 .build();
 
-        given(artistRepository.findBy("ExpectedID"))
+        given(artistRepository.findById("ExpectedID"))
                 .willReturn(Mono.just(expectedArtist));
 
         StepVerifier.create(artistService.getArtist("ExpectedID"))
@@ -92,7 +91,7 @@ class ArtistServiceTest {
     @Test
     void givenNoArtist_whenGettingArtist_thenReturnNotFoundException() {
 
-        given(artistRepository.findBy("NonExistingID"))
+        given(artistRepository.findById("NonExistingID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(artistService.getArtist("NonExistingID"))
@@ -124,7 +123,7 @@ class ArtistServiceTest {
                 .version(3)
                 .build();
 
-        given(artistRepository.findBy("TestID"))
+        given(artistRepository.findById("TestID"))
                 .willReturn(Mono.just(initialArtist));
 
         given(artistRepository.save(expectedArtist))
@@ -143,7 +142,7 @@ class ArtistServiceTest {
                 .name("New artist name")
                 .build();
 
-        given(artistRepository.findBy("TestID"))
+        given(artistRepository.findById("TestID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(artistService.updateArtist("TestID", updateParams))
@@ -167,7 +166,7 @@ class ArtistServiceTest {
                 .name("New artist name")
                 .build();
 
-        given(artistRepository.findBy("TestID"))
+        given(artistRepository.findById("TestID"))
                 .willReturn(Mono.just(initialArtist));
 
         StepVerifier.create(artistService.updateArtist("TestID", updateParams))
@@ -186,7 +185,7 @@ class ArtistServiceTest {
                 .profilePictureUrl("http://test.com")
                 .build();
 
-        given(artistRepository.findBy("ExistingID"))
+        given(artistRepository.findById("ExistingID"))
                 .willReturn(Mono.just(existingArtist));
 
         given(artistRepository.delete(existingArtist))
@@ -199,7 +198,7 @@ class ArtistServiceTest {
     @Test
     void givenNonExistingArtist_whenDeletingArtist_thenReturnNotFoundException() {
 
-        given(artistRepository.findBy("NonExistingID"))
+        given(artistRepository.findById("NonExistingID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(artistService.deleteArtist("NonExistingID"))

@@ -89,7 +89,7 @@ class TrackServiceTest {
                 .version(1)
                 .build();
 
-        given(trackRepository.findBy("ExpectedID"))
+        given(trackRepository.findById("ExpectedID"))
                 .willReturn(Mono.just(expectedTrack));
 
         StepVerifier.create(trackService.getTrack("ExpectedID"))
@@ -100,7 +100,7 @@ class TrackServiceTest {
     @Test
     void givenNoTrack_whenGettingTrack_thenReturnNotFoundException() {
 
-        given(trackRepository.findBy("NonExistingID"))
+        given(trackRepository.findById("NonExistingID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(trackService.getTrack("NonExistingID"))
@@ -136,7 +136,7 @@ class TrackServiceTest {
                 .version(3)
                 .build();
 
-        given(trackRepository.findBy("TestID"))
+        given(trackRepository.findById("TestID"))
                 .willReturn(Mono.just(initialTrack));
 
         given(trackRepository.save(expectedTrack))
@@ -155,7 +155,7 @@ class TrackServiceTest {
                 .title("New track title")
                 .build();
 
-        given(trackRepository.findBy("TestID"))
+        given(trackRepository.findById("TestID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(trackService.updateTrack("TestID", updateParams))
@@ -181,7 +181,7 @@ class TrackServiceTest {
                 .title("New track title")
                 .build();
 
-        given(trackRepository.findBy("TestID"))
+        given(trackRepository.findById("TestID"))
                 .willReturn(Mono.just(initialTrack));
 
         StepVerifier.create(trackService.updateTrack("TestID", updateParams))
@@ -202,7 +202,7 @@ class TrackServiceTest {
                 .version(1)
                 .build();
 
-        given(trackRepository.findBy("ExistingID"))
+        given(trackRepository.findById("ExistingID"))
                 .willReturn(Mono.just(existingTrack));
 
         given(trackRepository.delete(existingTrack))
@@ -215,7 +215,7 @@ class TrackServiceTest {
     @Test
     void givenNonExistingTrack_whenDeletingTrack_thenReturnNotFoundException() {
 
-        given(trackRepository.findBy("NonExistingID"))
+        given(trackRepository.findById("NonExistingID"))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(trackService.deleteTrack("NonExistingID"))

@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 public interface TrackRepository {
 
     Mono<Track> save(Track track);
-    Mono<Track> findBy(String trackId);
+    Mono<Track> findById(String trackId);
     Mono<Void> delete(Track track);
 
 }

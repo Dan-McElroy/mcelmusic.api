@@ -11,6 +11,7 @@ import org.assertj.core.condition.Not;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpStatus.CONFLICT;
 
-@WebFluxTest(value = ArtistController.class, excludeAutoConfiguration = {ReactiveSecurityAutoConfiguration.class})
+@WebFluxTest(value = ArtistController.class, excludeAutoConfiguration = {ReactiveSecurityAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class})
 @ActiveProfiles("test")
 class ArtistControllerTest {
 
