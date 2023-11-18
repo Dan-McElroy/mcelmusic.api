@@ -1,5 +1,7 @@
 package com.mcelroy.mcelmusic.api.adapters.api.controllers;
 
+import com.mcelroy.mcelmusic.api.domain.model.Artist;
+import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackUpdateParamsDto;
@@ -7,6 +9,7 @@ import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
 import com.mcelroy.mcelmusic.api.domain.service.TrackService;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -33,6 +38,15 @@ class TrackControllerTest {
     @MockBean
     private TrackService trackService;
 
+    private static final Set<Artist> TEST_ARTISTS = Set.of(
+            Artist.builder().id("Artist ID 1").name("Four Tet").build(),
+            Artist.builder().id("Artist ID 1").name("Gil Scott-Heron").build()
+    );
+
+    private static final Genre TEST_GENRE = Genre.builder()
+            .id("Test genre ID").name("Soul")
+            .build();
+
     @Test
     void givenValidTrackCreationParams_whenCreatingTrack_thenReturnOk() {
          var trackCreationParams = TrackCreationParamsDto.builder()
@@ -45,9 +59,9 @@ class TrackControllerTest {
          var expectedTrack = Track.builder()
                  .id("CreatedID")
                  .title("Test track")
-                 .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                  .lengthSeconds(60)
-                 .genreId("Test genre ID")
+                 .artists(TEST_ARTISTS)
+                 .genre(TEST_GENRE)
                  .version(1)
                  .build();
 
@@ -93,9 +107,9 @@ class TrackControllerTest {
                 .id("ExistingID")
                 .version(2)
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(TEST_ARTISTS)
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .build();
 
         given(trackService.getTrack("ExistingID"))
@@ -136,9 +150,9 @@ class TrackControllerTest {
                 .id("UpdateID")
                 .version(2)
                 .title("New title")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(TEST_ARTISTS)
                 .lengthSeconds(60)
-                .genreId("New genre ID")
+                .genre(TEST_GENRE)
                 .build();
 
         given(trackService.updateTrack("UpdateID", updateParameters))

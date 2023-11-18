@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.Instant;
 import java.util.Set;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class Track {
     String id;

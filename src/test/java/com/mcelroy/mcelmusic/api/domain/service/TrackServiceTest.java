@@ -1,13 +1,19 @@
 package com.mcelroy.mcelmusic.api.domain.service;
 
 
+import com.mcelroy.mcelmusic.api.domain.model.Artist;
+import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.TrackUpdateParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
+import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
+import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +23,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -24,8 +31,31 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class TrackServiceTest {
 
+    private static final String TEST_ARTIST_ID_1 = "Artist ID 1";
+    private static final String TEST_ARTIST_ID_2 = "Artist ID 2";
+    private static final String TEST_GENRE_ID = "Test Genre ID";
+    private static final String TEST_TRACK_ID = "Test Track ID";
+
+    private static final Artist TEST_ARTIST_1 = Artist.builder()
+            .id(TEST_ARTIST_ID_1).name("Four Tet")
+            .build();
+
+    private static final Artist TEST_ARTIST_2 = Artist.builder()
+            .id(TEST_ARTIST_ID_2).name("Gil Scott-Heron")
+            .build();
+
+    private static final Genre TEST_GENRE = Genre.builder()
+            .id(TEST_GENRE_ID).name("Soul")
+            .build();
+
     @Mock
     private TrackRepository trackRepository;
+
+    @Mock
+    private ArtistRepository artistRepository;
+
+    @Mock
+    private GenreRepository genreRepository;
 
     @InjectMocks
     private TrackService trackService;
@@ -35,18 +65,20 @@ class TrackServiceTest {
 
         var trackCreationParams = TrackCreationParamsDto.builder()
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artistIds(List.of(TEST_ARTIST_ID_1, TEST_ARTIST_ID_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genreId(TEST_GENRE_ID)
                 .build();
 
         var expectedTrack = Track.builder()
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(1)
                 .build();
+
+        setupArtistsAndGenre();
 
         given(trackRepository.save(expectedTrack))
                 .willReturn(Mono.just(expectedTrack));
@@ -61,10 +93,12 @@ class TrackServiceTest {
 
         var trackCreationParams = TrackCreationParamsDto.builder()
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artistIds(List.of(TEST_ARTIST_ID_1, TEST_ARTIST_ID_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genreId(TEST_GENRE_ID)
                 .build();
+
+        setupArtistsAndGenre();
 
         given(trackRepository.save(any(Track.class)))
                 .willReturn(Mono.error(InvalidParametersException.track()));
@@ -79,11 +113,12 @@ class TrackServiceTest {
         var expectedTrack = Track.builder()
                 .id("ExpectedID")
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(1)
                 .build();
+
 
         given(trackRepository.findById("ExpectedID"))
                 .willReturn(Mono.just(expectedTrack));
@@ -108,11 +143,11 @@ class TrackServiceTest {
     void givenValidUpdateParams_whenUpdatingTrack_thenReturnUpdatedTrack() {
 
         var initialTrack = Track.builder()
-                .id("TestID")
+                .id(TEST_TRACK_ID)
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(2)
                 .build();
 
@@ -122,21 +157,21 @@ class TrackServiceTest {
                 .build();
 
         var expectedTrack = Track.builder()
-                .id("TestID")
+                .id(TEST_TRACK_ID)
                 .title("New track title")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(3)
                 .build();
 
-        given(trackRepository.findById("TestID"))
+        given(trackRepository.findById(TEST_TRACK_ID))
                 .willReturn(Mono.just(initialTrack));
 
         given(trackRepository.save(expectedTrack))
                 .willReturn(Mono.just(expectedTrack));
 
-        StepVerifier.create(trackService.updateTrack("TestID", updateParams))
+        StepVerifier.create(trackService.updateTrack(TEST_TRACK_ID, updateParams))
                 .expectNext(expectedTrack)
                 .verifyComplete();
     }
@@ -149,10 +184,10 @@ class TrackServiceTest {
                 .title("New track title")
                 .build();
 
-        given(trackRepository.findById("TestID"))
+        given(trackRepository.findById(TEST_TRACK_ID))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(trackService.updateTrack("TestID", updateParams))
+        StepVerifier.create(trackService.updateTrack(TEST_TRACK_ID, updateParams))
                 .expectError(NotFoundException.class)
                 .verify();
     }
@@ -161,11 +196,11 @@ class TrackServiceTest {
     void givenIncorrectVersion_whenUpdatingTrack_thenReturnUpdatedTrack() {
 
         var initialTrack = Track.builder()
-                .id("TestID")
+                .id(TEST_TRACK_ID)
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(2)
                 .build();
 
@@ -186,34 +221,41 @@ class TrackServiceTest {
     void givenExistingTrack_whenDeletingTrack_thenReturnEmpty() {
 
         var existingTrack = Track.builder()
-                .id("ExistingID")
+                .id(TEST_TRACK_ID)
                 .title("Test track")
-                .artistIds(List.of("Artist ID 1", "Artist ID 2"))
+                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
-                .genreId("Test genre ID")
+                .genre(TEST_GENRE)
                 .version(1)
                 .build();
 
-        given(trackRepository.findById("ExistingID"))
+        given(trackRepository.findById(TEST_TRACK_ID))
                 .willReturn(Mono.just(existingTrack));
 
         given(trackRepository.delete(existingTrack))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(trackService.deleteTrack("ExistingID"))
+        StepVerifier.create(trackService.deleteTrack(TEST_TRACK_ID))
                 .verifyComplete();
     }
 
     @Test
     void givenNonExistingTrack_whenDeletingTrack_thenReturnNotFoundException() {
 
-        given(trackRepository.findById("NonExistingID"))
+        given(trackRepository.findById(TEST_TRACK_ID))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(trackService.deleteTrack("NonExistingID"))
+        StepVerifier.create(trackService.deleteTrack(TEST_TRACK_ID))
                 .expectError(NotFoundException.class)
                 .verify();
 
     }
 
+    private void setupArtistsAndGenre() {
+        given(artistRepository.findAllById(Set.of(TEST_ARTIST_ID_1, TEST_ARTIST_ID_2)))
+                .willReturn(Mono.just(Set.of(TEST_ARTIST_1, TEST_ARTIST_2)));
+
+        given(genreRepository.findById(TEST_GENRE_ID))
+                .willReturn(Mono.just(TEST_GENRE));
+    }
 }

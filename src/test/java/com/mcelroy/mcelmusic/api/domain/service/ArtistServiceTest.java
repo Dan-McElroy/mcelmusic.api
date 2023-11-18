@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,14 +36,14 @@ class ArtistServiceTest {
 
         var artistCreationParams = ArtistCreationParamsDto.builder()
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 
         var expectedArtist = Artist.builder()
                 .name("Test artist")
                 .version(1)
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 
@@ -58,7 +59,7 @@ class ArtistServiceTest {
     void givenInvalidParams_whenCreatingArtist_thenThrowInvalidParametersException() {
 
         var artistCreationParams = ArtistCreationParamsDto.builder()
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 
@@ -76,7 +77,7 @@ class ArtistServiceTest {
                 .id("ExpectedID")
                 .name("Test artist")
                 .version(1)
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 
@@ -105,7 +106,7 @@ class ArtistServiceTest {
         var initialArtist = Artist.builder()
                 .id("TestID")
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .version(2)
                 .build();
@@ -118,7 +119,7 @@ class ArtistServiceTest {
         var expectedArtist = Artist.builder()
                 .id("TestID")
                 .name("New artist name")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .version(3)
                 .build();
@@ -156,7 +157,7 @@ class ArtistServiceTest {
         var initialArtist = Artist.builder()
                 .id("TestID")
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .version(2)
                 .build();
@@ -181,7 +182,7 @@ class ArtistServiceTest {
                 .id("ExistingID")
                 .name("Test artist")
                 .version(1)
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 

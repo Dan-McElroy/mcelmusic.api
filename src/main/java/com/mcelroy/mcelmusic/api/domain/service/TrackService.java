@@ -58,11 +58,10 @@ public class TrackService {
                 .switchIfEmpty(Mono.error(VersionConflictException.track()))
                 .flatMap(track ->
                         getUpdatedGenre(update, track).map(genre ->
-                            Track.builder()
+                            track.toBuilder()
                             .id(track.getId())
                             .version(track.getVersion() + 1)
                             .title(update.title() != null ? update.title() : track.getTitle())
-                            //.artistIds(update.artistIds() != null ? update.artistIds() : track.getArtistIds())
                             .genre(genre)
                             .lengthSeconds(update.lengthSeconds() != null
                                     ? update.lengthSeconds()

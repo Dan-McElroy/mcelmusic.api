@@ -43,7 +43,7 @@ class ArtistControllerTest {
     void givenValidArtistCreationParams_whenCreatingArtist_thenReturnOk() {
         var artistCreationParams = ArtistCreationParamsDto.builder()
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 
@@ -73,7 +73,7 @@ class ArtistControllerTest {
     @Test
     void givenMissingName_whenCreatingArtist_thenReturnRequest() {
         var artistCreationParams = ArtistCreationParamsDto.builder()
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 
