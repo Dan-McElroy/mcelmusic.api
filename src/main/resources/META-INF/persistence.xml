@@ -8,6 +8,8 @@
 
         <class>com.mcelroy.mcelmusic.api.adapters.db.model.TrackDbo</class>
         <class>com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo</class>
+        <class>com.mcelroy.mcelmusic.api.adapters.db.model.ArtistAliasDbo</class>
+        <class>com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo</class>
 
         <properties>
 

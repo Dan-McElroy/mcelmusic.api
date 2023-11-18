@@ -2,15 +2,13 @@ package com.mcelroy.mcelmusic.api.adapters.db.model;
 
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -21,9 +19,8 @@ import java.time.Instant;
 public class GenreDbo {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid")
-    String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
 
     @Version
     int version;
@@ -34,6 +31,9 @@ public class GenreDbo {
     Timestamp creationTime = Timestamp.from(Instant.now());
 
     String name;
+
+    @OneToMany(mappedBy = "genre")
+    Set<TrackDbo> tracks;
 
     public static GenreDbo fromGenre(Genre genre) {
         return null;

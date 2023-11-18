@@ -2,6 +2,7 @@ package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
 import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
+import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Repository
 @AllArgsConstructor
-public class GenreDboRepository {
+public class GenreDboRepository implements GenreRepository {
 
     private Mutiny.SessionFactory sessionFactory;
 

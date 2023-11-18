@@ -2,16 +2,13 @@ package com.mcelroy.mcelmusic.api.adapters.db.model;
 
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -22,9 +19,8 @@ import java.util.Set;
 public class ArtistDbo {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid")
-    String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
 
     @Version
     int version;
@@ -37,7 +33,7 @@ public class ArtistDbo {
     @OneToMany(mappedBy = "artist")
     Set<ArtistAliasDbo> aliases;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "artists")
     Set<TrackDbo> tracks;
 
     public static ArtistDbo fromArtist(Artist artist) {

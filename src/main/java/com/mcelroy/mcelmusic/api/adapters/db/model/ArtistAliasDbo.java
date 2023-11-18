@@ -1,11 +1,9 @@
 package com.mcelroy.mcelmusic.api.adapters.db.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class ArtistAliasDbo {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid")
-    String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "artist_id", nullable = false)

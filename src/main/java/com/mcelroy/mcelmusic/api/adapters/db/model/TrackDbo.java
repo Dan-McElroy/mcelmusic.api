@@ -3,12 +3,13 @@ package com.mcelroy.mcelmusic.api.adapters.db.model;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Data
@@ -20,9 +21,8 @@ import java.util.Set;
 public final class TrackDbo {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid")
-    String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
 
     @Version
     int version;
@@ -36,7 +36,7 @@ public final class TrackDbo {
 
     @ManyToMany()
     @JoinTable(
-            name = "track_artist",
+            name = "artist_tracks",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "track_id") }
     )
@@ -46,12 +46,13 @@ public final class TrackDbo {
     @JoinColumn(name = "genre_id")
     GenreDbo genre;
 
+    @Column(name = "length_seconds")
+    @Check(constraints = "length_seconds > 0")
     int lengthSeconds;
-
 
     public static TrackDbo fromTrack(Track track) {
         return TrackDbo.builder()
-                .id(track.getId())
+                .id(UUID.fromString(track.getId()))
                 .version(track.getVersion())
                 .creationTime(null)
                 .build();

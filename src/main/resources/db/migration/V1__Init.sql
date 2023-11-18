@@ -30,7 +30,7 @@ CREATE TABLE if not exists track (
     length_seconds serial CHECK (length_seconds > 0)
 );
 
-CREATE TABLE if not exists track_artist (
+CREATE TABLE if not exists artist_tracks (
     track_id uuid REFERENCES track,
     artist_id uuid REFERENCES artist
 );
