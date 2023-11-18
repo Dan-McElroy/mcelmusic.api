@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.util.Set;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class Artist {
     String id;

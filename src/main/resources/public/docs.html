@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>McElMusic API</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4/swagger-ui.css">
+  <style>#swagger-ui { margin: 0 auto; max-width: 60em; } </style>
+  <script src="https://unpkg.com/swagger-ui-dist@4/swagger-ui-bundle.js"></script>
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script>
+  SwaggerUIBundle({
+    url: "openapi.yml",
+    dom_id: '#swagger-ui',
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIBundle.SwaggerUIStandalonePreset
+    ]
+  })
+</script>
+</body>
+</html>

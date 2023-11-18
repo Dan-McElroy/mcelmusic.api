@@ -37,8 +37,8 @@ public class ArtistService {
                 .switchIfEmpty(handleNotFound())
                 .filter(artist -> artist.getVersion() == update.version())
                 .switchIfEmpty(Mono.error(VersionConflictException.artist()))
-                .map(artist -> Artist.builder()
-                        .id(artist.getId())
+                .map(artist ->
+                        artist.toBuilder()
                         .version(artist.getVersion() + 1)
                         .name(update.name() != null ? update.name() : artist.getName())
                         .aliases(update.aliases() != null

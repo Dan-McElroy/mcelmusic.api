@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
     implementation 'io.smallrye.reactive:mutiny-reactor:2.0.0'
     implementation 'org.flywaydb:flyway-core'
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2' // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compileOnly 'org.projectlombok:lombok'
     implementation 'com.ongres.scram:client:2.1'
