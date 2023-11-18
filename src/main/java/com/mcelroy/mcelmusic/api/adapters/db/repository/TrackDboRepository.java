@@ -1,5 +1,7 @@
 package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
+import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
 import com.mcelroy.mcelmusic.api.adapters.db.model.TrackDbo;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
@@ -11,6 +13,8 @@ import org.hibernate.reactive.mutiny.Mutiny;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @Repository
 @AllArgsConstructor
 public class TrackDboRepository implements TrackRepository {
@@ -18,7 +22,15 @@ public class TrackDboRepository implements TrackRepository {
     private Mutiny.SessionFactory sessionFactory;
 
     public Mono<Track> save(Track track) {
+        var genreDbo = GenreDbo.fromGenre(track.getGenre());
+
+        var artistDbos = track.getArtists().stream()
+                .map(ArtistDbo::fromArtist)
+                .collect(Collectors.toSet());
+
         var trackDbo = TrackDbo.fromTrack(track);
+        trackDbo.setGenre(genreDbo);
+        trackDbo.setArtists(artistDbos);
         var saveOperation = (trackDbo.getId() == null)
                 ? this.sessionFactory.withSession(session ->
                 session.persist(trackDbo)

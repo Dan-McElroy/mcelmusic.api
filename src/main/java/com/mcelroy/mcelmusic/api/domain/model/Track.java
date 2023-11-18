@@ -4,27 +4,30 @@ import com.mcelroy.mcelmusic.api.domain.model.dto.TrackCreationParamsDto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
+import java.time.Instant;
+import java.util.Set;
 
 @Builder
 @Data
 public class Track {
     String id;
     int version;
+    Instant creationTime;
     String title;
-    List<String> artistIds;
-    String genreId;
+    Set<Artist> artists;
+    Genre genre;
     int lengthSeconds;
-    String albumId;
+
+    public void addArtist(Artist artist) {
+        this.artists.add(artist);
+        artist.getTracks().add(this);
+    }
 
     public static Track fromDto(TrackCreationParamsDto dto) {
         return Track.builder()
                 .version(1)
                 .title(dto.title())
-                .artistIds(dto.artistIds())
-                .genreId(dto.genreId())
                 .lengthSeconds(dto.lengthSeconds())
-                .albumId(dto.albumId())
                 .build();
     }
 }

@@ -14,9 +14,12 @@
   - Single dev for a very short term project
 - Storage solution for profile pictures
 - More parameter annotations (mins, maxes, expected String formats)
+  - Currently possible to submit a 
 - Detailed error feedback, i.e. if bad parameters when creating track, which parameters?
+  - When creating a track with bad/non-existing artist IDs, bad entries will be ignored
   - Existing error handling feels overengineered, unmaintainable
 - Parameter checks and failures in data model
+- No time for Postman collection
 
 ### Architecture
 - Onion!

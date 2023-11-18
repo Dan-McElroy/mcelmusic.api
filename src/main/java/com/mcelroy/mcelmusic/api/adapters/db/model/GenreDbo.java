@@ -1,6 +1,6 @@
 package com.mcelroy.mcelmusic.api.adapters.db.model;
 
-import com.mcelroy.mcelmusic.api.domain.model.Artist;
+import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,15 +11,14 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder(toBuilder = true)
-@Table(name = "artist")
-public class ArtistDbo {
+@Table(name = "genre")
+public class GenreDbo {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,18 +33,13 @@ public class ArtistDbo {
     @CreationTimestamp
     Timestamp creationTime = Timestamp.from(Instant.now());
 
-    @OneToMany(mappedBy = "artist")
-    Set<ArtistAliasDbo> aliases;
+    String name;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    Set<TrackDbo> tracks;
-
-    public static ArtistDbo fromArtist(Artist artist) {
-        // DON'T DO TRACKS IN HERE
-        throw new UnsupportedOperationException("Not yet implemented");
+    public static GenreDbo fromGenre(Genre genre) {
+        return null;
     }
 
-    public static Artist toArtist(ArtistDbo artist) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public static Genre toGenre(GenreDbo genreDbo) {
+        return null;
     }
 }

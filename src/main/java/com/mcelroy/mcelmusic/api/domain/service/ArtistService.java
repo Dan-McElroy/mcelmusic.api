@@ -18,10 +18,8 @@ public class ArtistService {
 
     private final ArtistRepository artistRepository;
 
-    public Mono<Artist> createArtist(ArtistCreationParamsDto artistCreationParams) {
-        // TODO - handle missing parameters
-        var newArtist = Artist.fromDto(artistCreationParams);
-        return artistRepository.save(newArtist);
+    public Mono<Artist> createArtist(ArtistCreationParamsDto creationParams) {
+        return artistRepository.save(Artist.fromDto(creationParams));
     }
 
     public Mono<Artist> getArtist(String artistId) {

@@ -37,7 +37,6 @@ class TrackControllerTest {
     void givenValidTrackCreationParams_whenCreatingTrack_thenReturnOk() {
          var trackCreationParams = TrackCreationParamsDto.builder()
                  .title("Test track")
-                 .albumId("Test album ID")
                  .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                  .lengthSeconds(60)
                  .genreId("Test genre ID")
@@ -46,7 +45,6 @@ class TrackControllerTest {
          var expectedTrack = Track.builder()
                  .id("CreatedID")
                  .title("Test track")
-                 .albumId("Test album ID")
                  .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                  .lengthSeconds(60)
                  .genreId("Test genre ID")
@@ -72,7 +70,6 @@ class TrackControllerTest {
     void givenMissingArtist_whenCreatingTrack_thenReturnRequest() {
         var trackCreationParams = TrackCreationParamsDto.builder()
                 .title("Test track")
-                .albumId("Test album ID")
                 .lengthSeconds(60)
                 .genreId("Test genre ID")
                 .build();
@@ -96,7 +93,6 @@ class TrackControllerTest {
                 .id("ExistingID")
                 .version(2)
                 .title("Test track")
-                .albumId("Test album ID")
                 .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                 .lengthSeconds(60)
                 .genreId("Test genre ID")
@@ -140,7 +136,6 @@ class TrackControllerTest {
                 .id("UpdateID")
                 .version(2)
                 .title("New title")
-                .albumId("Test album ID")
                 .artistIds(List.of("Artist ID 1", "Artist ID 2"))
                 .lengthSeconds(60)
                 .genreId("New genre ID")

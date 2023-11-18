@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -50,7 +51,7 @@ class ArtistControllerTest {
                 .id("CreatedID")
                 .version(1)
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 
@@ -95,7 +96,7 @@ class ArtistControllerTest {
                 .id("ExistingID")
                 .version(2)
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 
@@ -136,7 +137,7 @@ class ArtistControllerTest {
                 .id("UpdateID")
                 .version(3)
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://bing.com")
                 .build();
 
@@ -201,7 +202,7 @@ class ArtistControllerTest {
                 .id("DailyID")
                 .version(2)
                 .name("Test artist")
-                .aliases(List.of("Alias 1", "Alias 2"))
+                .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 

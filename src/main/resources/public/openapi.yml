@@ -63,9 +63,6 @@ paths:
                   type: integer
                   minimum: 1
                   example: 169
-                albumId:
-                  type: string
-                  format: uuid
       responses:
         '200':
           description: Track updated
@@ -103,7 +100,6 @@ paths:
                 - title
                 - artists
                 - lengthSeconds
-                - albumId
               properties:
                 title:
                   type: string
@@ -120,9 +116,6 @@ paths:
                   type: integer
                   minimum: 1
                   example: 169
-                albumId:
-                  type: string
-                  format: uuid
       responses:
         '200':
           description: Track created successfully
@@ -264,7 +257,6 @@ components:
         - artists
         - genreId
         - lengthSeconds
-        - albumId
       properties:
         id:
           type: string
@@ -288,9 +280,6 @@ components:
           type: integer
           minimum: 1
           example: 169
-        albumId:
-          type: string
-          format: uuid
     Artist:
       type: object
       required:

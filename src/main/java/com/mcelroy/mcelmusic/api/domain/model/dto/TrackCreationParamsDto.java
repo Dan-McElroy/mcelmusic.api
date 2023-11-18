@@ -11,6 +11,5 @@ public record TrackCreationParamsDto(
         List<String> artistIds,
         @Nullable
         String genreId,
-        Integer lengthSeconds,
-        String albumId) {
+        Integer lengthSeconds) {
 }

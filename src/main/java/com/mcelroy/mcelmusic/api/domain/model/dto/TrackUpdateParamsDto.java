@@ -16,9 +16,7 @@ public record TrackUpdateParamsDto(
         @Nullable
         String genreId,
         @Nullable
-        Integer lengthSeconds,
-        @Nullable
-        String albumId
+        Integer lengthSeconds
 ) {
 
 }
