@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-database-postgresql:10.0.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.5'
@@ -46,19 +55,5 @@ tasks.named('bootBuildImage') {
     builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-testing {
-    suites {
-        test {
-            dependencies {
-                implementation 'io.projectreactor:reactor-test'
-                implementation 'org.springframework.boot:spring-boot-starter-test'
-                implementation 'org.springframework.security:spring-security-test'
-            }
-            useJUnitJupiter()
-        }
-    }
-}
+apply from: "gradle/testing.gradle"
+apply from: "gradle/flyway.gradle"

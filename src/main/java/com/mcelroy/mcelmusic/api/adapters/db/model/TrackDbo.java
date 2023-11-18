@@ -1,5 +1,6 @@
 package com.mcelroy.mcelmusic.api.adapters.db.model;
 
+import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -50,15 +52,30 @@ public final class TrackDbo {
     @Check(constraints = "length_seconds > 0")
     int lengthSeconds;
 
+    /**
+     * Converts a {@link Track} domain model into a DBO, excluding association fields.
+     * @param track Domain model of a track
+     */
     public static TrackDbo fromTrack(Track track) {
         return TrackDbo.builder()
-                .id(UUID.fromString(track.getId()))
+                .id(track.getId() != null ? UUID.fromString(track.getId()) : null)
                 .version(track.getVersion())
-                .creationTime(null)
+                //
                 .build();
     }
 
+    /**
+     * Converts a Track DBO into a domain model {@link Track},
+     * @param trackDbo DBO of a track
+     */
     public static Track toTrack(TrackDbo trackDbo) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return Track.builder()
+                .id(trackDbo.getId().toString())
+                .version(trackDbo.getVersion())
+                .title(trackDbo.getTitle())
+                .lengthSeconds(trackDbo.getLengthSeconds())
+                .genre(GenreDbo.toGenre(trackDbo.getGenre()))
+                .artists(trackDbo.artists.stream().map(ArtistDbo::toArtist).collect(Collectors.toSet()))
+                .build();
     }
 }

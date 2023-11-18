@@ -12,6 +12,7 @@ paths:
         name: trackId
         description: The ID of the track, which must already exist.
         required: true
+        example: 8f89510a-1c28-44d5-87ad-1ca2121d9374
         schema:
           type: string
           format: uuid
@@ -261,13 +262,14 @@ components:
         id:
           type: string
           format: uuid
+          example: 8f89510a-1c28-44d5-87ad-1ca2121d9374
         version:
           type: integer
           description: The latest known version of the track record. Used to
             detect conflicts between concurrent updates.
         title:
           type: string
-          example: Breathe (In The Air)
+          example: Moth
         artists:
           type: array
           items:
@@ -279,7 +281,7 @@ components:
         lengthSeconds:
           type: integer
           minimum: 1
-          example: 169
+          example: 560
     Artist:
       type: object
       required:
@@ -290,21 +292,27 @@ components:
         id:
           type: string
           format: uuid
+          example: db756ca1-5b1f-46ac-873a-743ec75afa0b
         version:
           type: integer
+          minimum: 1
           description: The latest known version of the artist record. Used to
             detect conflicts between concurrent updates.
         name:
           type: string
           description: The primary name of the artist.
-          example: Pink Floyd
+          example: Four Tet
         aliases:
           type: array
           description: A list of aliases the artist is known by.
+          example:
+            - KH
+            - "⣎⡇ꉺლ༽இ•̛)ྀ◞ ༎ຶ ༽ৣৢ؞ৢ؞ؖ ꉺლ"
           items:
             type: string
         profilePictureUrl:
           type: string
           description: The location of the artist's profile picture.
           format: url
+          example: https://i.scdn.co/image/ab6761610000517484e29d09b4917bec2700a0d7
 

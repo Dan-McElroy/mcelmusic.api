@@ -12,13 +12,11 @@ public class Artist {
     String id;
     int version;
     String name;
-    Set<Track> tracks;
     Set<String> aliases;
     String profilePictureUrl;
 
     public static Artist fromDto(ArtistCreationParamsDto dto) {
         return Artist.builder()
-                .version(1)
                 .name(dto.name())
                 .profilePictureUrl(dto.profilePictureUrl())
                 .aliases(dto.aliases())

@@ -13,6 +13,7 @@ import org.hibernate.reactive.mutiny.Mutiny;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
@@ -45,7 +46,7 @@ public class TrackDboRepository implements TrackRepository {
 
     public Mono<Track> findById(@NonNull String trackId) {
         var findOperation = this.sessionFactory.withSession(session ->
-                        session.find(TrackDbo.class, trackId));
+                        session.find(TrackDbo.class, UUID.fromString(trackId)));
         return convert(findOperation);
     }
 

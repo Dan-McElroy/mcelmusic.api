@@ -20,6 +20,7 @@
   - Existing error handling feels overengineered, unmaintainable
 - Parameter checks and failures in data model
 - No time for Postman collection
+- Not very intuitive/dev-friendly setup between domain models and dbos
 
 ### Architecture
 - Onion!

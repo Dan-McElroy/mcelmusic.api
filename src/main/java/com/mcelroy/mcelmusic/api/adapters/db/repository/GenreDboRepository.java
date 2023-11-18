@@ -11,6 +11,8 @@ import org.hibernate.reactive.mutiny.Mutiny;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Repository
 @AllArgsConstructor
 public class GenreDboRepository implements GenreRepository {
@@ -33,7 +35,7 @@ public class GenreDboRepository implements GenreRepository {
 
     public Mono<Genre> findById(@NonNull String genreId) {
         var findOperation = this.sessionFactory.withSession(session ->
-                session.find(GenreDbo.class, genreId));
+                session.find(GenreDbo.class, UUID.fromString(genreId)));
         return convert(findOperation);
     }
 

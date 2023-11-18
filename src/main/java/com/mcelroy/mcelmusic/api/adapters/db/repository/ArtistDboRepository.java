@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
@@ -42,13 +43,14 @@ public class ArtistDboRepository implements ArtistRepository {
 
     public Mono<Artist> findById(@NonNull String artistId) {
         var findOperation = this.sessionFactory.withSession(session ->
-                session.find(ArtistDbo.class, artistId));
+                session.find(ArtistDbo.class, UUID.fromString(artistId)));
         return convert(findOperation);
     }
 
     public Mono<Set<Artist>> findAllById(@NonNull Set<String> artistIds) {
+        var artistUuids = artistIds.stream().map(UUID::fromString).toArray();
         return this.sessionFactory.withSession(session ->
-                        session.find(ArtistDbo.class, artistIds.toArray()))
+                        session.find(ArtistDbo.class, artistUuids))
                                 .map(artistDbos -> artistDbos.stream()
                                         .map(ArtistDbo::toArtist)
                                         .collect(Collectors.toSet()))

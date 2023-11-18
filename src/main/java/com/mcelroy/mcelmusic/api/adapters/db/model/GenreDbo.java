@@ -36,10 +36,17 @@ public class GenreDbo {
     Set<TrackDbo> tracks;
 
     public static GenreDbo fromGenre(Genre genre) {
-        return null;
+        return GenreDbo.builder()
+                .id(genre.getId() != null ? UUID.fromString(genre.getId()) : null)
+                .version(genre.getVersion())
+                .name(genre.getName())
+                .build();
     }
 
     public static Genre toGenre(GenreDbo genreDbo) {
-        return null;
+        return Genre.builder()
+                .id(genreDbo.getId().toString())
+                .name(genreDbo.getName())
+                .build();
     }
 }

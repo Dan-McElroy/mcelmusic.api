@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
@@ -22,7 +23,7 @@ public class ArtistAliasDboRepository implements ArtistAliasRepository {
         var criteriaBuilder = sessionFactory.getCriteriaBuilder();
         var query = criteriaBuilder.createQuery(ArtistAliasDbo.class);
         var root = query.from(ArtistAliasDbo.class);
-        query.select(root).where(criteriaBuilder.equal(root.get("artist_id"), artistId));
+        query.select(root).where(criteriaBuilder.equal(root.get("artist_id"), UUID.fromString(artistId)));
 
         return sessionFactory.withSession(session ->
                 session.createQuery(query)

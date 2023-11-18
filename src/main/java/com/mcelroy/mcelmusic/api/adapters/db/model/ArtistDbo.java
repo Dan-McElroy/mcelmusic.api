@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -22,8 +23,14 @@ public class ArtistDbo {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-    @Version
-    int version;
+    @Builder.Default
+    int version = 1;
+
+    @Column(name = "name")
+    String name;
+
+    @Column(name = "profile_picture_url")
+    String profilePictureUrl;
 
     @Builder.Default
     @Column(name = "creation_time")
@@ -36,12 +43,28 @@ public class ArtistDbo {
     @ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "artists")
     Set<TrackDbo> tracks;
 
+    /**
+     * Converts an {@link Artist} domain model into a DBO, excluding association fields.
+     * @param artist Domain model of an artist
+     */
     public static ArtistDbo fromArtist(Artist artist) {
-        // DON'T DO TRACKS IN HERE
-        throw new UnsupportedOperationException("Not yet implemented");
+        return ArtistDbo.builder()
+                .id(artist.getId() != null ? UUID.fromString(artist.getId()) : null)
+                .name(artist.getName())
+                .profilePictureUrl(artist.getProfilePictureUrl())
+                .build();
     }
 
-    public static Artist toArtist(ArtistDbo artist) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Converts an Artist DBO into a domain model {@link Artist},
+     * @param artistDbo DBO of an artist
+     */
+    public static Artist toArtist(ArtistDbo artistDbo) {
+        return Artist.builder()
+                .id(artistDbo.getId().toString())
+                .version(artistDbo.getVersion())
+                .profilePictureUrl(artistDbo.getProfilePictureUrl())
+                .aliases(artistDbo.getAliases().stream().map(ArtistAliasDbo::getAlias).collect(Collectors.toSet()))
+                .build();
     }
 }
