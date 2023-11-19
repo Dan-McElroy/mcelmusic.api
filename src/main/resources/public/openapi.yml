@@ -170,9 +170,13 @@ paths:
                     detect conflicts between concurrent updates.
                 name:
                   type: string
+                  description: The name of the artist.
                   example: Pink Floyd
                 profilePictureUrl:
                   type: string
+                  description: The location of the artist's profile picture.
+                  format: url
+                  example: https://i.scdn.co/image/ab6761610000517484e29d09b4917bec2700a0d7
       responses:
         '200':
           description: Artist updated
@@ -222,6 +226,7 @@ paths:
                   type: string
                   description: The location of the artist's profile picture.
                   format: url
+                  example: https://i.scdn.co/image/ab6761610000517484e29d09b4917bec2700a0d7
       responses:
         '200':
           description: Artist created successfully
@@ -246,6 +251,101 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '404':
           description: No artists found in the metadata service
+  /genre/{genreId}:
+    parameters:
+      - in: path
+        name: genreId
+        description: The ID of the genre, which must already exist.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Genres
+      summary: Get Genre By ID
+      description: Gets information about an genre by ID
+      responses:
+        '200':
+          description: Genre found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        '404':
+          description: Genre not found
+    patch:
+      tags:
+        - Genres
+      summary: Update Genre
+      description: Updates the metadata for a particular genre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: integer
+                  minimum: 0
+                  description: The latest known version of the genre record. Used to
+                    detect conflicts between concurrent updates.
+                name:
+                  type: string
+                  description: The name of the genre.
+                  example: Nu Metal
+      responses:
+        '200':
+          description: Genre updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        '404':
+          description: Genre not found
+        '409':
+          description: Genre version conflict
+    delete:
+      tags:
+        - Genres
+      summary: Delete Genre
+      description: Deletes an genre from the metadata service.
+      responses:
+        '204':
+          description: Genre deleted successfully
+        '404':
+          description: Genre not found
+  /genre:
+    put:
+      tags:
+        - Genres
+      summary: Create Genre
+      description: Adds an genre to the metadata service.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: The name of the genre.
+                  example: Pop
+      responses:
+        '200':
+          description: Genre created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        '400':
+          description: Invalid parameters
 
 components:
   schemas:
@@ -315,4 +415,23 @@ components:
           description: The location of the artist's profile picture.
           format: url
           example: https://i.scdn.co/image/ab6761610000517484e29d09b4917bec2700a0d7
-
+    Genre:
+      type: object
+      required:
+        - id
+        - version
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 99c4dd05-083d-40c5-acaa-e80ffe228a6d
+        version:
+          type: integer
+          minimum: 1
+          description: The latest known version of the genre record. Used to
+            detect conflicts between concurrent updates.
+        name:
+          type: string
+          description: The name of the genre.
+          example: Soul

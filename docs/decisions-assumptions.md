@@ -30,6 +30,8 @@
 
 ### Data Model
 - Genre Objects with IDs
+  - Simple right now (just name) but have made create/update DTOs to allow room for it to get more complex in the future
+  - (Examples of this?)
 - Multiple artists per track (collaborations)
   - If artist deleted and track has no other artists, track deleted
 - Stretch goal: Albums (TODO: find more generic term)

@@ -10,6 +10,7 @@ public class VersionConflictException extends RuntimeException {
 
     private static final String TRACK_VERSION_CONFLICT = "Track version conflict";
     private static final String ARTIST_VERSION_CONFLICT = "Artist version conflict";
+    private static final String GENRE_VERSION_CONFLICT = "Genre version conflict";
 
     private final String reason;
 
@@ -19,5 +20,9 @@ public class VersionConflictException extends RuntimeException {
 
     public static VersionConflictException artist() {
         return new VersionConflictException(ARTIST_VERSION_CONFLICT);
+    }
+
+    public static VersionConflictException genre() {
+        return new VersionConflictException(GENRE_VERSION_CONFLICT);
     }
 }

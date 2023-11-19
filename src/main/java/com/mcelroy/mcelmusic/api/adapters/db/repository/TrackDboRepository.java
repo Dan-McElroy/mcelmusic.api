@@ -38,8 +38,8 @@ public class TrackDboRepository implements TrackRepository {
     public Mono<Track> findById(@NonNull String trackId) {
         var findOperation = this.sessionFactory.withSession(session ->
                         session.find(TrackDbo.class, UUID.fromString(trackId))
-                                .call(track -> Mutiny.fetch(track.getArtists()))
-                                .call(track -> Mutiny.fetch(track.getGenre()))
+                                .call(track -> session.fetch(track.getArtists()))
+                                .call(track -> session.fetch(track.getGenre()))
                                 .map(TrackDbo::toTrack));
         return RepositoryUtils.convert(findOperation);
     }

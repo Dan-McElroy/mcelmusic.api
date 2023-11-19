@@ -33,6 +33,8 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @ActiveProfiles("test")
 class ArtistControllerTest {
 
+    private static final String TEST_ARTIST_ID = "Artist ID";
+
     @Autowired
     private WebTestClient client;
 
@@ -48,7 +50,7 @@ class ArtistControllerTest {
                 .build();
 
         var expectedArtist = Artist.builder()
-                .id("CreatedID")
+                .id(TEST_ARTIST_ID)
                 .version(1)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
@@ -93,18 +95,18 @@ class ArtistControllerTest {
     @Test
     void givenExistingArtist_whenGettingArtist_thenReturnArtist() {
         var expectedArtist = Artist.builder()
-                .id("ExistingID")
+                .id(TEST_ARTIST_ID)
                 .version(2)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://google.com")
                 .build();
 
-        given(artistService.getArtist("ExistingID"))
+        given(artistService.getArtist(TEST_ARTIST_ID))
                 .willReturn(Mono.just(expectedArtist));
 
         client.get()
-                .uri("/artist/ExistingID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -115,11 +117,11 @@ class ArtistControllerTest {
 
     @Test
     void givenNonExistingArtist_whenGettingArtist_thenReturnNotFound() {
-        given(artistService.getArtist("NonExistingID"))
+        given(artistService.getArtist(TEST_ARTIST_ID))
                 .willReturn(Mono.error(NotFoundException.artist()));
 
         client.get()
-                .uri("/artist/NonExistingID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -134,18 +136,18 @@ class ArtistControllerTest {
                 .build();
 
         var expectedArtist = Artist.builder()
-                .id("UpdateID")
+                .id(TEST_ARTIST_ID)
                 .version(3)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://bing.com")
                 .build();
 
-        given(artistService.updateArtist("UpdateID", updateParameters))
+        given(artistService.updateArtist(TEST_ARTIST_ID, updateParameters))
                 .willReturn(Mono.just(expectedArtist));
 
         client.patch()
-                .uri("/artist/UpdateID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -163,11 +165,11 @@ class ArtistControllerTest {
                 .profilePictureUrl("http://bing.com")
                 .build();
 
-        given(artistService.updateArtist("NonExistingID", updateParameters))
+        given(artistService.updateArtist(TEST_ARTIST_ID, updateParameters))
                 .willReturn(Mono.error(NotFoundException.artist()));
 
         client.patch()
-                .uri("/artist/NonExistingID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -183,11 +185,11 @@ class ArtistControllerTest {
                 .profilePictureUrl("http://bing.com")
                 .build();
 
-        given(artistService.updateArtist("UpdateID", updateParameters))
+        given(artistService.updateArtist(TEST_ARTIST_ID, updateParameters))
                 .willReturn(Mono.error(VersionConflictException.artist()));
 
         client.patch()
-                .uri("/artist/UpdateID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -199,7 +201,7 @@ class ArtistControllerTest {
     @Test
     void whenGettingArtistOfTheDay_thenReturnArtist() {
         var expectedArtist = Artist.builder()
-                .id("DailyID")
+                .id(TEST_ARTIST_ID)
                 .version(2)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
@@ -221,11 +223,11 @@ class ArtistControllerTest {
 
     @Test
     void givenExistingArtist_whenDeletingArtist_thenReturnNoContent() {
-        given(artistService.deleteArtist("ToBeDeletedID"))
+        given(artistService.deleteArtist(TEST_ARTIST_ID))
                 .willReturn(Mono.empty());
 
         client.delete()
-                .uri("/artist/ToBeDeletedID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -234,11 +236,11 @@ class ArtistControllerTest {
 
     @Test
     void givenANonExistingArtistId_whenDeletingArtist_thenReturnNotFound() {
-        given(artistService.deleteArtist("NonExistingID"))
+        given(artistService.deleteArtist(TEST_ARTIST_ID))
                 .willReturn(Mono.error(NotFoundException.artist()));
 
         client.delete()
-                .uri("/artist/NonExistingID")
+                .uri("/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()

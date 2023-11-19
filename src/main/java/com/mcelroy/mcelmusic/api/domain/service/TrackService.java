@@ -67,7 +67,7 @@ public class TrackService {
                                     ? update.lengthSeconds()
                                     : track.getLengthSeconds())
                             .build()))
-                .flatMap(track -> trackRepository.save(track).then(Mono.just(track)));
+                .flatMap(trackRepository::save);
     }
 
     public Mono<Void> deleteTrack(String trackId) {

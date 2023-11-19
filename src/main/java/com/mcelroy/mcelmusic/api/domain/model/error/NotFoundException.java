@@ -10,6 +10,7 @@ public class NotFoundException extends RuntimeException {
 
     private static final String TRACK_NOT_FOUND = "Track not found";
     private static final String ARTIST_NOT_FOUND = "Artist not found";
+    private static final String GENRE_NOT_FOUND = "Genre not found";
 
     private final String reason;
 
@@ -19,5 +20,9 @@ public class NotFoundException extends RuntimeException {
 
     public static NotFoundException artist() {
         return new NotFoundException(ARTIST_NOT_FOUND);
+    }
+
+    public static NotFoundException genre() {
+        return new NotFoundException(GENRE_NOT_FOUND);
     }
 }

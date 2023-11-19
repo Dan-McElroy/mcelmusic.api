@@ -48,7 +48,7 @@ public class ArtistService {
                                 ? update.profilePictureUrl()
                                 : artist.getProfilePictureUrl())
                         .build())
-                .flatMap(artist -> artistRepository.save(artist).then(Mono.just(artist)));
+                .flatMap(artistRepository::save);
     }
 
     public Mono<Void> deleteArtist(String artistId) {

@@ -15,6 +15,7 @@ public class InvalidParametersException extends RuntimeException {
 
     private static final String INVALID_TRACK_PARAMETERS = "Invalid track parameters";
     private static final String INVALID_ARTIST_PARAMETERS = "Invalid artist parameters";
+    private static final String INVALID_GENRE_PARAMETERS = "Invalid genre parameters";
 
     private final String reason;
 
@@ -26,5 +27,9 @@ public class InvalidParametersException extends RuntimeException {
 
     public static InvalidParametersException artist(String... invalidParameters) {
         return new InvalidParametersException(INVALID_ARTIST_PARAMETERS, Set.of(invalidParameters));
+    }
+
+    public static InvalidParametersException genre(String... invalidParameters) {
+        return new InvalidParametersException(INVALID_GENRE_PARAMETERS, Set.of(invalidParameters));
     }
 }
