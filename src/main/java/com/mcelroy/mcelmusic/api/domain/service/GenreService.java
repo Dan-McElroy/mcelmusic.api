@@ -3,6 +3,7 @@ package com.mcelroy.mcelmusic.api.domain.service;
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.model.dto.GenreCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.GenreUpdateParamsDto;
+import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
 import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
@@ -41,9 +42,9 @@ public class GenreService {
     }
 
     public Mono<Void> deleteGenre(String genreId) {
-        return genreRepository.findById(genreId)
-                .switchIfEmpty(handleNotFound())
-                .flatMap(genreRepository::delete);
+        return genreId != null
+                ? genreRepository.deleteById(genreId)
+                : Mono.error(InvalidParametersException.genre("genreId"));
     }
 
     private Mono<Genre> handleNotFound() {

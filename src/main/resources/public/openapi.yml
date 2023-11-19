@@ -79,12 +79,13 @@ paths:
       tags:
         - Tracks
       summary: Delete Track
-      description: Delete an existing track
+      description: Delete a track from the metadata service. 
+        Does not fail if there is no track with the given ID.
       responses:
         '204':
           description: Track deleted successfully
-        '404':
-          description: Track not found
+        '400':
+          description: Invalid track ID.
   /track:
     put:
       tags:
@@ -193,12 +194,13 @@ paths:
       tags:
         - Artists
       summary: Delete Artist
-      description: Deletes an artist from the metadata service.
+      description: Deletes an artist from the metadata service. 
+        Does not fail if there is no track with the given ID.
       responses:
         '204':
           description: Artist deleted successfully
-        '404':
-          description: Artist not found
+        '400':
+          description: Invalid track ID.
   /artist:
     put:
       tags:
@@ -314,11 +316,12 @@ paths:
         - Genres
       summary: Delete Genre
       description: Deletes an genre from the metadata service.
+        Does not fail if there is no track with the given ID.
       responses:
         '204':
           description: Genre deleted successfully
-        '404':
-          description: Genre not found
+        '400':
+          description: Invalid track ID.
   /genre:
     put:
       tags:

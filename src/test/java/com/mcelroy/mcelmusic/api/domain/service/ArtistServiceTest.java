@@ -26,6 +26,8 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class ArtistServiceTest {
 
+    private static final String TEST_ARTIST_ID = "Artist ID";
+
     @Mock
     private ArtistRepository artistRepository;
 
@@ -73,17 +75,17 @@ class ArtistServiceTest {
     @Test
     void givenExistingArtist_whenGettingArtist_thenReturnArtist() {
         var expectedArtist = Artist.builder()
-                .id("ExpectedID")
+                .id(TEST_ARTIST_ID)
                 .name("Test artist")
                 .version(1)
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
 
-        given(artistRepository.findById("ExpectedID"))
+        given(artistRepository.findById(TEST_ARTIST_ID))
                 .willReturn(Mono.just(expectedArtist));
 
-        StepVerifier.create(artistService.getArtist("ExpectedID"))
+        StepVerifier.create(artistService.getArtist(TEST_ARTIST_ID))
                 .expectNext(expectedArtist)
                 .verifyComplete();
     }
@@ -91,10 +93,10 @@ class ArtistServiceTest {
     @Test
     void givenNoArtist_whenGettingArtist_thenReturnNotFoundException() {
 
-        given(artistRepository.findById("NonExistingID"))
+        given(artistRepository.findById(TEST_ARTIST_ID))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(artistService.getArtist("NonExistingID"))
+        StepVerifier.create(artistService.getArtist(TEST_ARTIST_ID))
                 .expectError(NotFoundException.class)
                 .verify();
     }
@@ -103,7 +105,7 @@ class ArtistServiceTest {
     void givenValidUpdateParams_whenUpdatingArtist_thenReturnUpdatedArtist() {
 
         var initialArtist = Artist.builder()
-                .id("TestID")
+                .id(TEST_ARTIST_ID)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
@@ -116,20 +118,20 @@ class ArtistServiceTest {
                 .build();
 
         var expectedArtist = Artist.builder()
-                .id("TestID")
+                .id(TEST_ARTIST_ID)
                 .name("New artist name")
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .version(3)
                 .build();
 
-        given(artistRepository.findById("TestID"))
+        given(artistRepository.findById(TEST_ARTIST_ID))
                 .willReturn(Mono.just(initialArtist));
 
         given(artistRepository.save(expectedArtist))
                 .willReturn(Mono.just(expectedArtist));
 
-        StepVerifier.create(artistService.updateArtist("TestID", updateParams))
+        StepVerifier.create(artistService.updateArtist(TEST_ARTIST_ID, updateParams))
                 .expectNext(expectedArtist)
                 .verifyComplete();
     }
@@ -142,10 +144,10 @@ class ArtistServiceTest {
                 .name("New artist name")
                 .build();
 
-        given(artistRepository.findById("TestID"))
+        given(artistRepository.findById(TEST_ARTIST_ID))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(artistService.updateArtist("TestID", updateParams))
+        StepVerifier.create(artistService.updateArtist(TEST_ARTIST_ID, updateParams))
                 .expectError(NotFoundException.class)
                 .verify();
     }
@@ -154,7 +156,7 @@ class ArtistServiceTest {
     void givenIncorrectVersion_whenUpdatingArtist_thenReturnUpdatedArtist() {
 
         var initialArtist = Artist.builder()
-                .id("TestID")
+                .id(TEST_ARTIST_ID)
                 .name("Test artist")
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
@@ -166,50 +168,35 @@ class ArtistServiceTest {
                 .name("New artist name")
                 .build();
 
-        given(artistRepository.findById("TestID"))
+        given(artistRepository.findById(TEST_ARTIST_ID))
                 .willReturn(Mono.just(initialArtist));
 
-        StepVerifier.create(artistService.updateArtist("TestID", updateParams))
+        StepVerifier.create(artistService.updateArtist(TEST_ARTIST_ID, updateParams))
                 .expectError(VersionConflictException.class)
                 .verify();
     }
 
     @Test
-    void givenExistingArtist_whenDeletingArtist_thenReturnEmpty() {
+    void givenValidId_whenDeletingTrack_thenReturnEmpty() {
 
-        var existingArtist = Artist.builder()
-                .id("ExistingID")
-                .name("Test artist")
-                .version(1)
-                .aliases(Set.of("Alias 1", "Alias 2"))
-                .profilePictureUrl("http://test.com")
-                .build();
-
-        given(artistRepository.findById("ExistingID"))
-                .willReturn(Mono.just(existingArtist));
-
-        given(artistRepository.delete(existingArtist))
+        given(artistRepository.deleteById(TEST_ARTIST_ID))
                 .willReturn(Mono.empty());
 
-        StepVerifier.create(artistService.deleteArtist("ExistingID"))
+        StepVerifier.create(artistService.deleteArtist(TEST_ARTIST_ID))
                 .verifyComplete();
     }
 
     @Test
-    void givenNonExistingArtist_whenDeletingArtist_thenReturnNotFoundException() {
+    void givenNullId_whenDeletingTrack_thenReturnInvalidParametersException() {
 
-        given(artistRepository.findById("NonExistingID"))
-                .willReturn(Mono.empty());
-
-        StepVerifier.create(artistService.deleteArtist("NonExistingID"))
-                .expectError(NotFoundException.class)
+        StepVerifier.create(artistService.deleteArtist(null))
+                .expectError(InvalidParametersException.class)
                 .verify();
     }
 
     @Test
     void givenCurrentTime_whenGettingArtistOfTheDay_passIndex() {
-
-
+        fail();
     }
 
 }

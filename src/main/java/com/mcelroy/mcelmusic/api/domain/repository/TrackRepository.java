@@ -7,6 +7,6 @@ public interface TrackRepository {
 
     Mono<Track> save(Track track);
     Mono<Track> findById(String trackId);
-    Mono<Void> delete(Track track);
+    Mono<Void> deleteById(String trackId);
 
 }

@@ -32,7 +32,12 @@ public class GenreDbo implements Identifiable {
 
     String name;
 
-    @OneToMany(mappedBy = "genre")
+    @OneToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH,
+    }, mappedBy = "genre")
     Set<TrackDbo> tracks;
 
     public static GenreDbo fromGenre(Genre genre) {

@@ -3,6 +3,7 @@ package com.mcelroy.mcelmusic.api.domain.service;
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.model.dto.ArtistCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.ArtistUpdateParamsDto;
+import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
@@ -58,9 +59,9 @@ public class ArtistService {
     }
 
     public Mono<Void> deleteArtist(String artistId) {
-        return artistRepository.findById(artistId)
-                .switchIfEmpty(handleNotFound())
-                .flatMap(artistRepository::delete);
+        return artistId != null
+            ? artistRepository.deleteById(artistId)
+            : Mono.error(InvalidParametersException.artist("artistId"));
     }
 
     private Mono<Artist> handleNotFound() {

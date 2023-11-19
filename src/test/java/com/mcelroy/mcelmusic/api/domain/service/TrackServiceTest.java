@@ -217,21 +217,9 @@ class TrackServiceTest {
     }
 
     @Test
-    void givenExistingTrack_whenDeletingTrack_thenReturnEmpty() {
+    void givenValidId_whenDeletingTrack_thenReturnEmpty() {
 
-        var existingTrack = Track.builder()
-                .id(TEST_TRACK_ID)
-                .title("Test track")
-                .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
-                .lengthSeconds(60)
-                .genre(TEST_GENRE)
-                .version(1)
-                .build();
-
-        given(trackRepository.findById(TEST_TRACK_ID))
-                .willReturn(Mono.just(existingTrack));
-
-        given(trackRepository.delete(existingTrack))
+        given(trackRepository.deleteById(TEST_TRACK_ID))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(trackService.deleteTrack(TEST_TRACK_ID))
@@ -239,15 +227,11 @@ class TrackServiceTest {
     }
 
     @Test
-    void givenNonExistingTrack_whenDeletingTrack_thenReturnNotFoundException() {
+    void givenNullId_whenDeletingTrack_thenReturnInvalidParametersException() {
 
-        given(trackRepository.findById(TEST_TRACK_ID))
-                .willReturn(Mono.empty());
-
-        StepVerifier.create(trackService.deleteTrack(TEST_TRACK_ID))
-                .expectError(NotFoundException.class)
+        StepVerifier.create(trackService.deleteTrack(null))
+                .expectError(InvalidParametersException.class)
                 .verify();
-
     }
 
     private void setupArtistsAndGenre() {

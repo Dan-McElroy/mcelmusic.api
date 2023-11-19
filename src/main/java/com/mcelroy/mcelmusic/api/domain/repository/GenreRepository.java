@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 public interface GenreRepository {
     Mono<Genre> save(Genre genre);
     Mono<Genre> findById(String genreId);
-    Mono<Void> delete(Genre genre);
+    Mono<Void> deleteById(String genreId);
 }

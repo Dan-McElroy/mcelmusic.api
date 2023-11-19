@@ -1,7 +1,6 @@
 package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
-import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistAliasDbo;
-import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.model.*;
 import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
@@ -35,6 +34,7 @@ public class ArtistDboRepository implements ArtistRepository {
     public Mono<Artist> findById(@NonNull String artistId) {
         var findOperation = this.sessionFactory.withSession(session ->
                 session.find(ArtistDbo.class, UUID.fromString(artistId))
+                        .call(artist -> session.fetch(artist.getAliases()))
                         .map(ArtistDbo::toArtist));
         return RepositoryUtils.convert(findOperation);
     }
@@ -53,11 +53,12 @@ public class ArtistDboRepository implements ArtistRepository {
         var criteriaBuilder = this.sessionFactory.getCriteriaBuilder();
         var artistQuery = criteriaBuilder.createQuery(ArtistDbo.class);
         var root = artistQuery.from(ArtistDbo.class);
-        artistQuery.select(root).orderBy(criteriaBuilder.asc(root.get("created_time")));
+        artistQuery.select(root).orderBy(criteriaBuilder.asc(root.get(ArtistDbo_.CREATION_TIME)));
 
-        var queryOperation = this.sessionFactory.withSession(session -> session.createQuery(artistQuery)
+        var queryOperation = this.sessionFactory.withTransaction(session -> session.createQuery(artistQuery)
                 .setMaxResults(1).setFirstResult(index)
                 .getSingleResult()
+                .call(artist -> session.fetch(artist.getAliases()))
                 .map(ArtistDbo::toArtist));
         return RepositoryUtils.convert(queryOperation);
     }
@@ -74,9 +75,7 @@ public class ArtistDboRepository implements ArtistRepository {
         return RepositoryUtils.convert(countOperation);
     }
 
-    public Mono<Void> delete(@NonNull Artist artist) {
-        return this.sessionFactory.withSession(session ->
-                        session.remove(ArtistDbo.fromArtist(artist)).onItem().call(session::flush))
-                .convert().with(UniReactorConverters.toMono());
+    public Mono<Void> deleteById(@NonNull String artistId) {
+        return RepositoryUtils.deleteById(artistId, ArtistDbo_.ID, ArtistDbo.class, sessionFactory);
     }
 }

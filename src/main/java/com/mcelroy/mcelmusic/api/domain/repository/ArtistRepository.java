@@ -11,5 +11,5 @@ public interface ArtistRepository {
     Mono<Set<Artist>> findAllById(Set<String> artistIds);
     Mono<Artist> findNthArtist(int index);
     Mono<Long> count();
-    Mono<Void> delete(Artist artist);
+    Mono<Void> deleteById(String artistId);
 }

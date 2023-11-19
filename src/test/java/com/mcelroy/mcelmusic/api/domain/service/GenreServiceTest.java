@@ -3,6 +3,7 @@ package com.mcelroy.mcelmusic.api.domain.service;
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.model.dto.GenreCreationParamsDto;
 import com.mcelroy.mcelmusic.api.domain.model.dto.GenreUpdateParamsDto;
+import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
 import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
@@ -143,18 +144,9 @@ public class GenreServiceTest {
     }
 
     @Test
-    void givenExistingGenre_whenDeletingGenre_thenReturnEmpty() {
+    void givenValidId_whenDeletingGenre_thenReturnEmpty() {
 
-        var existingGenre = Genre.builder()
-                .id(TEST_GENRE_ID)
-                .name("Pop")
-                .version(1)
-                .build();
-
-        given(genreRepository.findById(TEST_GENRE_ID))
-                .willReturn(Mono.just(existingGenre));
-
-        given(genreRepository.delete(existingGenre))
+        given(genreRepository.deleteById(TEST_GENRE_ID))
                 .willReturn(Mono.empty());
 
         StepVerifier.create(genreService.deleteGenre(TEST_GENRE_ID))
@@ -162,14 +154,10 @@ public class GenreServiceTest {
     }
 
     @Test
-    void givenNonExistingGenre_whenDeletingGenre_thenReturnNotFoundException() {
+    void givenNullId_whenDeletingGenre_thenReturnInvalidParametersException() {
 
-        given(genreRepository.findById(TEST_GENRE_ID))
-                .willReturn(Mono.empty());
-
-        StepVerifier.create(genreService.deleteGenre(TEST_GENRE_ID))
-                .expectError(NotFoundException.class)
+        StepVerifier.create(genreService.deleteGenre(null))
+                .expectError(InvalidParametersException.class)
                 .verify();
-
     }
 }

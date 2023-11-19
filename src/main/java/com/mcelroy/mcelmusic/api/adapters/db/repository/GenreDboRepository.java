@@ -1,10 +1,10 @@
 package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
 import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo_;
 import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
-import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.reactive.mutiny.Mutiny;
@@ -31,9 +31,7 @@ public class GenreDboRepository implements GenreRepository {
         return RepositoryUtils.convert(findOperation);
     }
 
-    public Mono<Void> delete(@NonNull Genre genre) {
-        return this.sessionFactory.withSession(session ->
-                        session.remove(GenreDbo.fromGenre(genre)).onItem().call(session::flush))
-                .convert().with(UniReactorConverters.toMono());
+    public Mono<Void> deleteById(@NonNull String genreId) {
+        return RepositoryUtils.deleteById(genreId, GenreDbo_.ID, GenreDbo.class, sessionFactory);
     }
 }

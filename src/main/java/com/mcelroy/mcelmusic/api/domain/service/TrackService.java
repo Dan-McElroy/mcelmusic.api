@@ -71,9 +71,9 @@ public class TrackService {
     }
 
     public Mono<Void> deleteTrack(String trackId) {
-        return trackRepository.findById(trackId)
-                .switchIfEmpty(handleNotFound())
-                .flatMap(trackRepository::delete);
+        return trackId != null
+                ? trackRepository.deleteById(trackId)
+                : Mono.error(InvalidParametersException.track("trackId"));
     }
 
     private Mono<Track> handleNotFound() {

@@ -47,7 +47,7 @@ public final class TrackDbo implements Identifiable {
     )
     Set<ArtistDbo> artists = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "genre_id")
     GenreDbo genre;
 

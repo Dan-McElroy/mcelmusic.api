@@ -41,10 +41,10 @@ public class ArtistDbo implements Identifiable {
     Timestamp creationTime = Timestamp.from(Instant.now());
 
     @Builder.Default
-    @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<ArtistAliasDbo> aliases = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "artists")
+    @ManyToMany(mappedBy = "artists")
     Set<TrackDbo> tracks;
 
     /**

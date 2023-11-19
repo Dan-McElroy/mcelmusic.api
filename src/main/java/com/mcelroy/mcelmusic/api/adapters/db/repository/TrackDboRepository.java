@@ -1,12 +1,9 @@
 package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
-import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
-import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
-import com.mcelroy.mcelmusic.api.adapters.db.model.TrackDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.model.*;
 import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.reactive.mutiny.Mutiny;
@@ -44,9 +41,7 @@ public class TrackDboRepository implements TrackRepository {
         return RepositoryUtils.convert(findOperation);
     }
 
-    public Mono<Void> delete(@NonNull Track track) {
-        var deleteOperation = this.sessionFactory.withSession(session ->
-                session.remove(TrackDbo.fromTrack(track)).onItem().call(session::flush));
-        return RepositoryUtils.convert(deleteOperation);
+    public Mono<Void> deleteById(@NonNull String trackId) {
+        return RepositoryUtils.deleteById(trackId, TrackDbo_.ID, TrackDbo.class, sessionFactory);
     }
 }
