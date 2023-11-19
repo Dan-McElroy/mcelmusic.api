@@ -132,6 +132,7 @@ paths:
         name: artistId
         description: The ID of the artist, which must already exist.
         required: true
+        example: 54a1f1ee-0210-419e-9610-667ecc9e3a5a
         schema:
           type: string
           format: uuid

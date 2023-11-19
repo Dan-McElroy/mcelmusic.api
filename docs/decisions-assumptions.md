@@ -6,8 +6,8 @@
 - Provide additional endpoints for other necessary admin functions (adding artists, editing/deleting tracks)
 
 ### Tech Stack
-- Spring Boot application providing a REST API
-- Backed by a PostgreSQL DB
+- Spring Boot Webflux application providing a REST API
+- Backed by a PostgresQL DB via Hibernate Reactive with Flyway migrations
 
 ### Limitations
 - Setting up testing environments/branching policies
@@ -21,6 +21,13 @@
 - Parameter checks and failures in data model
 - No time for Postman collection
 - Not very intuitive/dev-friendly setup between domain models and dbos
+
+### Artist of the Day Implementation
+- Index on/order by artist creation time
+- Get days since Instant EPOCH, mod by number of artist records and retrieve 1 artist at that index
+- Implemented with two separate sessions, one per query (count and then select/order-by), which isn't ideal but also it
+made sense to keep logic in service
+  - Also count() could potentially be re-used in future
 
 ### Architecture
 - Onion!

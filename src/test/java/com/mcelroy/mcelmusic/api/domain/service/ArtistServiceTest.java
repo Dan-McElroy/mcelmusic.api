@@ -207,11 +207,9 @@ class ArtistServiceTest {
     }
 
     @Test
-    void givenSeveralArtists_whenGettingArtistOfTheDay_rotateThroughArtists() {
-        // create 4 artists
-        // set up 5 Instants for 5 consecutive days
-        // call the service for each instance, assert that first(?) is called twice
-        
+    void givenCurrentTime_whenGettingArtistOfTheDay_passIndex() {
+
+
     }
 
 }

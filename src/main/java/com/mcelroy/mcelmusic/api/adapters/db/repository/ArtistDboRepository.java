@@ -5,7 +5,6 @@ import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
 import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
-import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -37,7 +36,7 @@ public class ArtistDboRepository implements ArtistRepository {
         var findOperation = this.sessionFactory.withSession(session ->
                 session.find(ArtistDbo.class, UUID.fromString(artistId))
                         .map(ArtistDbo::toArtist));
-        return convert(findOperation);
+        return RepositoryUtils.convert(findOperation);
     }
 
     public Mono<Set<Artist>> findAllById(@NonNull Set<String> artistIds) {
@@ -50,13 +49,34 @@ public class ArtistDboRepository implements ArtistRepository {
                                 .convert().with(UniReactorConverters.toMono());
     }
 
+    public Mono<Artist> findNthArtist(int index) {
+        var criteriaBuilder = this.sessionFactory.getCriteriaBuilder();
+        var artistQuery = criteriaBuilder.createQuery(ArtistDbo.class);
+        var root = artistQuery.from(ArtistDbo.class);
+        artistQuery.select(root).orderBy(criteriaBuilder.asc(root.get("created_time")));
+
+        var queryOperation = this.sessionFactory.withSession(session -> session.createQuery(artistQuery)
+                .setMaxResults(1).setFirstResult(index)
+                .getSingleResult()
+                .map(ArtistDbo::toArtist));
+        return RepositoryUtils.convert(queryOperation);
+    }
+
+    public Mono<Long> count() {
+        var criteriaBuilder = this.sessionFactory.getCriteriaBuilder();
+        var countQuery = criteriaBuilder.createQuery(Long.class);
+        var root = countQuery.from(ArtistDbo.class);
+        countQuery.select(criteriaBuilder.count(root));
+
+        var countOperation = this.sessionFactory.withSession(session ->
+                session.createQuery(countQuery)
+                        .getSingleResult());
+        return RepositoryUtils.convert(countOperation);
+    }
+
     public Mono<Void> delete(@NonNull Artist artist) {
         return this.sessionFactory.withSession(session ->
                         session.remove(ArtistDbo.fromArtist(artist)).onItem().call(session::flush))
                 .convert().with(UniReactorConverters.toMono());
-    }
-
-    private static Mono<Artist> convert(Uni<Artist> operation) {
-        return operation.convert().with(UniReactorConverters.toMono());
     }
 }

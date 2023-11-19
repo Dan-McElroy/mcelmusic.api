@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Entity
 @Builder(toBuilder = true)
-@Table(name = "artist")
+@Table(name = "artist", indexes = {
+    @Index(columnList = "creation_time", name = "creation_time_idx")
+})
 public class ArtistDbo implements Identifiable {
 
     @Id
@@ -63,6 +65,9 @@ public class ArtistDbo implements Identifiable {
      * @param artistDbo DBO of an artist
      */
     public static Artist toArtist(ArtistDbo artistDbo) {
+        if (artistDbo == null) {
+            return null;
+        }
         return Artist.builder()
                 .id(artistDbo.getId().toString())
                 .version(artistDbo.getVersion())

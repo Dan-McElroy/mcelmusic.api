@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @AllArgsConstructor
@@ -28,8 +29,13 @@ public class ArtistService {
     }
 
     public Mono<Artist> getArtistOfTheDay(Instant currentTime) {
-        // current thinking: order by date added, return daysSinceUnixEpoch % artistRepository.count
-        return Mono.error(new UnsupportedOperationException("Not yet implemented"));
+
+        var daysSinceEpoch = ChronoUnit.DAYS.between(Instant.EPOCH, currentTime);
+
+        return artistRepository.count().flatMap(count -> {
+            var index = Math.toIntExact(daysSinceEpoch % count);
+            return artistRepository.findNthArtist(index);
+        });
     }
 
     public Mono<Artist> updateArtist(String artistId, ArtistUpdateParamsDto update) {

@@ -34,3 +34,5 @@ CREATE TABLE if not exists artist_tracks (
     track_id uuid REFERENCES track,
     artist_id uuid REFERENCES artist
 );
+
+CREATE INDEX creation_time_idx ON artist (creation_time)

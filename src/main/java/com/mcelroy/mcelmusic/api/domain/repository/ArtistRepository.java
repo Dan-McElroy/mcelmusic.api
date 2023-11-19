@@ -9,5 +9,7 @@ public interface ArtistRepository {
     Mono<Artist> save(Artist artist);
     Mono<Artist> findById(String artistId);
     Mono<Set<Artist>> findAllById(Set<String> artistIds);
+    Mono<Artist> findNthArtist(int index);
+    Mono<Long> count();
     Mono<Void> delete(Artist artist);
 }
