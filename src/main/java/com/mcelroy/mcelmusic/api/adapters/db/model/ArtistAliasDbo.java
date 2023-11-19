@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 @Builder(toBuilder = true)
 @Table(name = "artist_alias")
-public class ArtistAliasDbo {
+public class ArtistAliasDbo implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

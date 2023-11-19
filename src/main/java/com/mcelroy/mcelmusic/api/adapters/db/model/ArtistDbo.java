@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Entity
 @Builder(toBuilder = true)
 @Table(name = "artist")
-public class ArtistDbo {
+public class ArtistDbo implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -37,7 +37,7 @@ public class ArtistDbo {
     @CreationTimestamp
     Timestamp creationTime = Timestamp.from(Instant.now());
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
     Set<ArtistAliasDbo> aliases;
 
     @ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "artists")

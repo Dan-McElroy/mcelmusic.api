@@ -16,7 +16,7 @@ import java.util.UUID;
 @Entity
 @Builder(toBuilder = true)
 @Table(name = "genre")
-public class GenreDbo {
+public class GenreDbo implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

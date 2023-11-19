@@ -18,7 +18,6 @@ public class ArtistAliasDboRepository implements ArtistAliasRepository {
 
     private Mutiny.SessionFactory sessionFactory;
 
-    @Override
     public Mono<Set<String>> findAllByArtist(String artistId) {
         var criteriaBuilder = sessionFactory.getCriteriaBuilder();
         var query = criteriaBuilder.createQuery(ArtistAliasDbo.class);
@@ -35,7 +34,6 @@ public class ArtistAliasDboRepository implements ArtistAliasRepository {
                 .convert().with(UniReactorConverters.toMono());
     }
 
-    @Override
     public Mono<Void> createOrUpdate(String artistId, String alias) {
         return null;
     }

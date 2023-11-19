@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Entity
 @Builder(toBuilder = true)
 @Table(name = "track")
-public final class TrackDbo {
+public final class TrackDbo implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

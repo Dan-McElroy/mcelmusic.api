@@ -2,6 +2,7 @@ package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
 import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistAliasDbo;
 import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
 import io.smallrye.mutiny.Uni;
@@ -29,21 +30,13 @@ public class ArtistDboRepository implements ArtistRepository {
                 .map(ArtistAliasDbo::fromAlias)
                 .collect(Collectors.toSet()));
 
-        var saveOperation = (artistDbo.getId() == null)
-                ? this.sessionFactory.withSession(session ->
-                session.persist(artistDbo)
-                        .chain(session::flush)
-                        .replaceWith(artistDbo))
-                : sessionFactory.withTransaction(session ->
-                session.merge(artistDbo)
-                        .onItem()
-                        .call(session::flush));
-        return convert(saveOperation);
+        return RepositoryUtils.createOrUpdate(artistDbo, sessionFactory, ArtistDbo::toArtist);
     }
 
     public Mono<Artist> findById(@NonNull String artistId) {
         var findOperation = this.sessionFactory.withSession(session ->
-                session.find(ArtistDbo.class, UUID.fromString(artistId)));
+                session.find(ArtistDbo.class, UUID.fromString(artistId))
+                        .map(ArtistDbo::toArtist));
         return convert(findOperation);
     }
 
@@ -63,10 +56,7 @@ public class ArtistDboRepository implements ArtistRepository {
                 .convert().with(UniReactorConverters.toMono());
     }
 
-    private static Mono<Artist> convert(Uni<ArtistDbo> operation) {
-        return operation.convert().with(UniReactorConverters.toMono())
-                .flatMap(artistDbo -> artistDbo != null
-                        ? Mono.just(ArtistDbo.toArtist(artistDbo))
-                        : Mono.empty());
+    private static Mono<Artist> convert(Uni<Artist> operation) {
+        return operation.convert().with(UniReactorConverters.toMono());
     }
 }

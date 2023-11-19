@@ -1,9 +1,9 @@
 package com.mcelroy.mcelmusic.api.adapters.db.repository;
 
 import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
-import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -20,35 +20,20 @@ public class GenreDboRepository implements GenreRepository {
     private Mutiny.SessionFactory sessionFactory;
 
     public Mono<Genre> save(Genre genre) {
-        var genreDbo = GenreDbo.fromGenre(genre);
-        var saveOperation = (genreDbo.getId() == null)
-                ? this.sessionFactory.withSession(session ->
-                session.persist(genreDbo)
-                        .chain(session::flush)
-                        .replaceWith(genreDbo))
-                : sessionFactory.withTransaction(session ->
-                session.merge(genreDbo)
-                        .onItem()
-                        .call(session::flush));
-        return convert(saveOperation);
+        return RepositoryUtils.createOrUpdate(GenreDbo.fromGenre(genre),
+                sessionFactory, GenreDbo::toGenre);
     }
 
     public Mono<Genre> findById(@NonNull String genreId) {
         var findOperation = this.sessionFactory.withSession(session ->
-                session.find(GenreDbo.class, UUID.fromString(genreId)));
-        return convert(findOperation);
+                session.find(GenreDbo.class, UUID.fromString(genreId))
+                        .map(GenreDbo::toGenre));
+        return RepositoryUtils.convert(findOperation);
     }
 
     public Mono<Void> delete(@NonNull Genre genre) {
         return this.sessionFactory.withSession(session ->
                         session.remove(GenreDbo.fromGenre(genre)).onItem().call(session::flush))
                 .convert().with(UniReactorConverters.toMono());
-    }
-
-    private static Mono<Genre> convert(Uni<GenreDbo> operation) {
-        return operation.convert().with(UniReactorConverters.toMono())
-                .flatMap(genreDbo -> genreDbo != null
-                        ? Mono.just(GenreDbo.toGenre(genreDbo))
-                        : Mono.empty());
     }
 }

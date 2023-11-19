@@ -3,10 +3,9 @@ package com.mcelroy.mcelmusic.api.adapters.db.repository;
 import com.mcelroy.mcelmusic.api.adapters.db.model.ArtistDbo;
 import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
 import com.mcelroy.mcelmusic.api.adapters.db.model.TrackDbo;
+import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
-import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.converters.uni.UniReactorConverters;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -23,7 +22,6 @@ public class TrackDboRepository implements TrackRepository {
 
     private Mutiny.SessionFactory sessionFactory;
 
-    @Transactional
     public Mono<Track> save(Track track) {
         var genreDbo = GenreDbo.fromGenre(track.getGenre());
 
@@ -34,38 +32,21 @@ public class TrackDboRepository implements TrackRepository {
         var trackDbo = TrackDbo.fromTrack(track);
         trackDbo.setGenre(genreDbo);
         trackDbo.setArtists(artistDbos);
-        var saveOperation = (trackDbo.getId() == null)
-                ? this.sessionFactory.withSession(session ->
-                session.persist(trackDbo)
-                        .chain(session::flush)
-                        .replaceWith(trackDbo)
-                        .map(TrackDbo::toTrack))
-                : sessionFactory.withTransaction(session ->
-                session.merge(trackDbo)
-                        .onItem()
-                        .call(session::flush)
-                        .map(TrackDbo::toTrack));
-        return convert(saveOperation);
+        return RepositoryUtils.createOrUpdate(trackDbo, sessionFactory, TrackDbo::toTrack);
     }
 
-    @Transactional
     public Mono<Track> findById(@NonNull String trackId) {
         var findOperation = this.sessionFactory.withSession(session ->
                         session.find(TrackDbo.class, UUID.fromString(trackId))
                                 .call(track -> Mutiny.fetch(track.getArtists()))
                                 .call(track -> Mutiny.fetch(track.getGenre()))
                                 .map(TrackDbo::toTrack));
-        return convert(findOperation);
+        return RepositoryUtils.convert(findOperation);
     }
 
-    @Transactional
     public Mono<Void> delete(@NonNull Track track) {
-        return this.sessionFactory.withSession(session ->
-                session.remove(TrackDbo.fromTrack(track)).onItem().call(session::flush))
-                .convert().with(UniReactorConverters.toMono());
-    }
-
-    private Mono<Track> convert(Uni<Track> operation) {
-        return operation.convert().with(UniReactorConverters.toMono());
+        var deleteOperation = this.sessionFactory.withSession(session ->
+                session.remove(TrackDbo.fromTrack(track)).onItem().call(session::flush));
+        return RepositoryUtils.convert(deleteOperation);
     }
 }
