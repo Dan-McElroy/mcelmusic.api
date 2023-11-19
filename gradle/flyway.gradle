@@ -1,6 +1,5 @@
 flyway {
-    url = 'jdbc:postgresql://0.0.0.0:5432/mydatabase'
+    url = 'jdbc:postgresql://127.0.0.0:5432/mydatabase'
     user = 'myuser'
     password = 'secret'
-    cleanDisabled=false
 }
