@@ -64,7 +64,9 @@ public class ArtistDboRepository implements ArtistRepository {
     }
 
     private static Mono<Artist> convert(Uni<ArtistDbo> operation) {
-        return operation.map(ArtistDbo::toArtist)
-                .convert().with(UniReactorConverters.toMono());
+        return operation.convert().with(UniReactorConverters.toMono())
+                .flatMap(artistDbo -> artistDbo != null
+                        ? Mono.just(ArtistDbo.toArtist(artistDbo))
+                        : Mono.empty());
     }
 }

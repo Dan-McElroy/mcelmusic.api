@@ -46,7 +46,9 @@ public class GenreDboRepository implements GenreRepository {
     }
 
     private static Mono<Genre> convert(Uni<GenreDbo> operation) {
-        return operation.map(GenreDbo::toGenre)
-                .convert().with(UniReactorConverters.toMono());
+        return operation.convert().with(UniReactorConverters.toMono())
+                .flatMap(genreDbo -> genreDbo != null
+                        ? Mono.just(GenreDbo.toGenre(genreDbo))
+                        : Mono.empty());
     }
 }

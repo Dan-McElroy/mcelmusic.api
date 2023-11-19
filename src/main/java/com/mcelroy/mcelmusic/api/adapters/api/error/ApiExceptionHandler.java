@@ -1,6 +1,7 @@
 package com.mcelroy.mcelmusic.api.adapters.api.error;
 
 
+import com.mcelroy.mcelmusic.api.domain.model.dto.ErrorDto;
 import com.mcelroy.mcelmusic.api.domain.model.error.InvalidParametersException;
 import com.mcelroy.mcelmusic.api.domain.model.error.NotFoundException;
 import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -20,7 +23,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public Mono<ResponseEntity<Object>> handleAllUncaughtException(RuntimeException exception) {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(exception.getMessage() + "\n" + exception.getStackTrace()));
+                .body(ErrorDto.builder().failureReason(exception.getMessage()).build()));
     }
 
     @ExceptionHandler(InvalidParametersException.class)
@@ -28,7 +31,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public Mono<ResponseEntity<Object>> handleInvalidParametersException(InvalidParametersException exception) {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(exception.getReason()));
+                .body(ErrorDto.builder()
+                        .failureReason(exception.getReason())
+                        .details(Map.of("invalidParameters", exception.getInvalidParameters()))
+                        .build()));
     }
 
     @ExceptionHandler({NotFoundException.class})
@@ -36,7 +42,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public Mono<ResponseEntity<Object>> handleNotFoundException(NotFoundException exception) {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(exception.getReason()));
+                .body(ErrorDto.builder().failureReason(exception.getReason()).build()));
     }
 
     @ExceptionHandler(VersionConflictException.class)
@@ -44,6 +50,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public Mono<ResponseEntity<Object>> handleVersionConflictException(VersionConflictException exception) {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(exception.getReason()));
+                .body(ErrorDto.builder().failureReason(exception.getReason()).build()));
     }
 }
