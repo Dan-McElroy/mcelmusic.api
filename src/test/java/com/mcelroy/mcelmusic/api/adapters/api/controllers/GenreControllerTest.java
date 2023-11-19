@@ -191,17 +191,4 @@ class GenreControllerTest {
                 .expectStatus()
                 .isNoContent();
     }
-
-    @Test
-    void givenANonExistingGenreId_whenDeletingGenre_thenReturnNotFound() {
-
-        given(genreService.deleteGenre(TEST_GENRE_ID))
-                .willReturn(Mono.error(NotFoundException.genre()));
-        client.delete()
-                .uri("/genre/" + TEST_GENRE_ID)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isNotFound();
-    }
 }

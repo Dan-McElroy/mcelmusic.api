@@ -9,18 +9,29 @@ import com.mcelroy.mcelmusic.api.domain.model.error.VersionConflictException;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +41,9 @@ class ArtistServiceTest {
 
     @Mock
     private ArtistRepository artistRepository;
+
+    @Captor
+    private ArgumentCaptor<Integer> artistIndexCaptor;
 
     @InjectMocks
     private ArtistService artistService;
@@ -194,9 +208,30 @@ class ArtistServiceTest {
                 .verify();
     }
 
-    @Test
-    void givenCurrentTime_whenGettingArtistOfTheDay_passIndex() {
-        fail();
+    @ParameterizedTest
+    @MethodSource("getArtistOfTheDayData")
+    void givenTime_whenGettingArtistOfTheDay_passCorrectIndex(long artistCount, Instant instant, int expectedArtistIndex) {
+        given(artistRepository.count()).willReturn(Mono.just(artistCount));
+
+        given(artistRepository.findNthArtist(expectedArtistIndex))
+                .willReturn(Mono.just(Artist.builder().id(TEST_ARTIST_ID).build()));
+
+        StepVerifier.create(artistService.getArtistOfTheDay(instant))
+                .expectNextCount(1)
+                .verifyComplete();
+
+        then(artistRepository).should().findNthArtist(artistIndexCaptor.capture());
+
+        assertEquals(expectedArtistIndex, artistIndexCaptor.getValue());
+    }
+
+    static Stream<Arguments> getArtistOfTheDayData() {
+        return Stream.of(
+                Arguments.of(1L, Instant.EPOCH.plus(30, ChronoUnit.DAYS), 0),
+                Arguments.of(5L, Instant.EPOCH.plus(4978, ChronoUnit.DAYS), 3),
+                Arguments.of(5498L, Instant.EPOCH.plus(937, ChronoUnit.DAYS), 937),
+                Arguments.of(948L, Instant.parse("2023-11-19T23:26:43Z"), 720)
+        );
     }
 
 }

@@ -222,7 +222,7 @@ class ArtistControllerTest {
     }
 
     @Test
-    void givenExistingArtist_whenDeletingArtist_thenReturnNoContent() {
+    void whenDeletingArtist_thenReturnNoContent() {
         given(artistService.deleteArtist(TEST_ARTIST_ID))
                 .willReturn(Mono.empty());
 
@@ -232,19 +232,6 @@ class ArtistControllerTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-    }
-
-    @Test
-    void givenANonExistingArtistId_whenDeletingArtist_thenReturnNotFound() {
-        given(artistService.deleteArtist(TEST_ARTIST_ID))
-                .willReturn(Mono.error(NotFoundException.artist()));
-
-        client.delete()
-                .uri("/artist/" + TEST_ARTIST_ID)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isNotFound();
     }
 }
 

@@ -213,7 +213,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void givenExistingTrack_whenDeletingTrack_thenReturnNoContent() {
+    void whenDeletingTrack_thenReturnNoContent() {
 
         given(trackService.deleteTrack("ToBeDeletedID"))
                 .willReturn(Mono.empty());
@@ -224,18 +224,5 @@ class TrackControllerTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-    }
-
-    @Test
-    void givenANonExistingTrackId_whenDeletingTrack_thenReturnNotFound() {
-
-        given(trackService.deleteTrack("ToBeDeletedID"))
-                .willReturn(Mono.error(NotFoundException.track()));
-        client.delete()
-                .uri("/track/ToBeDeletedID")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isNotFound();
     }
 }
