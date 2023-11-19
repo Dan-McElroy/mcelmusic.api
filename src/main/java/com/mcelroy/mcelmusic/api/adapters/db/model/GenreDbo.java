@@ -46,6 +46,7 @@ public class GenreDbo implements Identifiable {
     public static Genre toGenre(GenreDbo genreDbo) {
         return Genre.builder()
                 .id(genreDbo.getId().toString())
+                .version(genreDbo.getVersion())
                 .name(genreDbo.getName())
                 .build();
     }

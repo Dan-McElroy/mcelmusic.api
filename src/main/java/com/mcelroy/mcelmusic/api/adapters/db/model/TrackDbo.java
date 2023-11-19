@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,13 +38,14 @@ public final class TrackDbo implements Identifiable {
 
     String title;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "artist_tracks",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "track_id") }
     )
-    Set<ArtistDbo> artists;
+    Set<ArtistDbo> artists = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "genre_id")

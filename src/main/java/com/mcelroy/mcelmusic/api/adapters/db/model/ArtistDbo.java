@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,8 +38,9 @@ public class ArtistDbo implements Identifiable {
     @CreationTimestamp
     Timestamp creationTime = Timestamp.from(Instant.now());
 
+    @Builder.Default
     @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
-    Set<ArtistAliasDbo> aliases;
+    Set<ArtistAliasDbo> aliases = new HashSet<>();
 
     @ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "artists")
     Set<TrackDbo> tracks;
@@ -50,6 +52,7 @@ public class ArtistDbo implements Identifiable {
     public static ArtistDbo fromArtist(Artist artist) {
         return ArtistDbo.builder()
                 .id(artist.getId() != null ? UUID.fromString(artist.getId()) : null)
+                .version(artist.getVersion())
                 .name(artist.getName())
                 .profilePictureUrl(artist.getProfilePictureUrl())
                 .build();
@@ -63,6 +66,7 @@ public class ArtistDbo implements Identifiable {
         return Artist.builder()
                 .id(artistDbo.getId().toString())
                 .version(artistDbo.getVersion())
+                .name(artistDbo.getName())
                 .profilePictureUrl(artistDbo.getProfilePictureUrl())
                 .aliases(artistDbo.getAliases().stream().map(ArtistAliasDbo::getAlias).collect(Collectors.toSet()))
                 .build();
