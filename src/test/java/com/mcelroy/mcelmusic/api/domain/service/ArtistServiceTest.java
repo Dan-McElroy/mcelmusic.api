@@ -42,7 +42,6 @@ class ArtistServiceTest {
 
         var expectedArtist = Artist.builder()
                 .name("Test artist")
-                .version(1)
                 .aliases(Set.of("Alias 1", "Alias 2"))
                 .profilePictureUrl("http://test.com")
                 .build();
