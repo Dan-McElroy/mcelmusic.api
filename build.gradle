@@ -44,7 +44,6 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2' // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compileOnly 'org.projectlombok:lombok'
     implementation 'com.ongres.scram:client:2.1'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'io.vertx:vertx-pg-client:4.5.0'
