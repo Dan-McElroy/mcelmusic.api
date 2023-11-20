@@ -43,10 +43,10 @@ public class ArtistDboRepository implements ArtistRepository {
     public Mono<Set<Artist>> findAllById(@NonNull Set<String> artistIds) {
         var artistUuids = artistIds.stream().map(UUID::fromString).toArray();
         return this.sessionFactory.withSession(session ->
-                        session.find(ArtistDbo.class, artistUuids))
+                        session.find(ArtistDbo.class, artistUuids)
                                 .map(artistDbos -> artistDbos.stream()
                                         .map(ArtistDbo::toArtist)
-                                        .collect(Collectors.toSet()))
+                                        .collect(Collectors.toSet())))
                                 .convert().with(UniReactorConverters.toMono());
     }
 

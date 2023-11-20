@@ -3,6 +3,7 @@ package com.mcelroy.mcelmusic.api.domain.model;
 import com.mcelroy.mcelmusic.api.domain.model.dto.ArtistCreationParamsDto;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.util.Set;
 

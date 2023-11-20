@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -27,6 +28,10 @@ public class TrackService {
     private final GenreRepository genreRepository;
 
     public Mono<Track> createTrack(TrackCreationParamsDto creationParams) {
+
+        if (creationParams.artistIds() == null || creationParams.artistIds().isEmpty()) {
+            return Mono.error(InvalidParametersException.track("artistIds"));
+        }
         var track = Track.fromDto(creationParams);
 
         return getArtistsForNewTrack(creationParams)
@@ -78,7 +83,7 @@ public class TrackService {
 
     private Mono<Set<Artist>> getArtistsForNewTrack(TrackCreationParamsDto creationParams) {
         return artistRepository.findAllById(new HashSet<>(creationParams.artistIds()))
-                .filter(artists -> !artists.isEmpty())
+                .filter(artists -> artists.stream().anyMatch(Objects::nonNull))
                 .switchIfEmpty(Mono.error(InvalidParametersException.track("artistIds")));
     }
 

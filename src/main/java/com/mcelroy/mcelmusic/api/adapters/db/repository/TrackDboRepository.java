@@ -4,6 +4,8 @@ import com.mcelroy.mcelmusic.api.adapters.db.model.*;
 import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +39,11 @@ public class TrackDboRepository implements TrackRepository {
     public Mono<Track> findById(@NonNull String trackId) {
         var findOperation = this.sessionFactory.withSession(session ->
                         session.find(TrackDbo.class, UUID.fromString(trackId))
-                                .call(track -> Mutiny.fetch(track.getGenre()))
-                                .call(track -> Mutiny.fetch(track.getArtists()).log())
+                                .call(track -> session.fetch(track.getGenre()))
+                                .call(track -> session.fetch(track.getArtists())
+                                        .onItem().transformToMulti(Multi.createFrom()::iterable)
+                                        .onItem().call(artistDbo -> session.fetch(artistDbo.getAliases()))
+                                        .collect().asList())
                                 .map(TrackDbo::toTrack));
         return RepositoryUtils.convert(findOperation);
     }
