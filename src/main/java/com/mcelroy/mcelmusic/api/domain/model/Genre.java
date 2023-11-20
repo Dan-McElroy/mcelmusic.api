@@ -3,6 +3,7 @@ package com.mcelroy.mcelmusic.api.domain.model;
 import com.mcelroy.mcelmusic.api.domain.model.dto.GenreCreationParamsDto;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.time.Instant;
 
@@ -10,7 +11,9 @@ import java.time.Instant;
 @Data
 public class Genre {
     String id;
-    int version;
+    @Nullable
+    Integer version;
+    @Nullable
     Instant creationTime;
     String name;
 

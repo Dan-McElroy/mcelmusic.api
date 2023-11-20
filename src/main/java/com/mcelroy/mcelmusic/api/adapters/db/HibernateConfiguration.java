@@ -10,8 +10,7 @@ public class HibernateConfiguration {
 
     @Bean
     public Mutiny.SessionFactory sessionFactory() {
-        try (var entityManagerFactory = Persistence.createEntityManagerFactory("metadata-pu")) {
-            return entityManagerFactory.unwrap(Mutiny.SessionFactory.class);
-        }
+        return Persistence.createEntityManagerFactory("metadata-pu")
+                .unwrap(Mutiny.SessionFactory.class);
     }
 }

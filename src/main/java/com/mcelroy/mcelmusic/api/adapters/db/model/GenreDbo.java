@@ -34,18 +34,12 @@ public class GenreDbo implements Identifiable {
     String name;
 
     @Builder.Default
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH,
-    }, mappedBy = "genre")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "genre")
     Set<TrackDbo> tracks = new HashSet<>();
 
     public static GenreDbo fromGenre(Genre genre) {
         return GenreDbo.builder()
                 .id(genre.getId() != null ? UUID.fromString(genre.getId()) : null)
-                .version(genre.getVersion())
                 .name(genre.getName())
                 .build();
     }
