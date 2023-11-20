@@ -25,14 +25,12 @@ class TrackDboTest {
                 .id(TEST_ID)
                 .title("Test track name")
                 .lengthSeconds(450)
-                .version(3)
                 .build();
         var dbo = TrackDbo.fromTrack(track);
 
         assertEquals(UUID.fromString(TEST_ID), dbo.getId());
         assertEquals("Test track name", dbo.getTitle());
         assertEquals(450, dbo.getLengthSeconds());
-        assertEquals(3, dbo.getVersion());
     }
 
     @Test
@@ -41,7 +39,6 @@ class TrackDboTest {
                 .id(TEST_ID)
                 .title("Test track name")
                 .lengthSeconds(450)
-                .version(3)
                 .artists(Set.of(
                         Artist.builder().id(TEST_ARTIST_ID).build()
                 ))
@@ -57,7 +54,6 @@ class TrackDboTest {
                 .id(TEST_ID)
                 .title("Test track name")
                 .lengthSeconds(450)
-                .version(3)
                 .genre(Genre.builder().id(TEST_GENRE_ID).build())
                 .build();
         var dbo = TrackDbo.fromTrack(track);
@@ -79,7 +75,6 @@ class TrackDboTest {
 
         var dbo = TrackDbo.builder()
                 .id(UUID.fromString(TEST_ID))
-                .version(3)
                 .title("Test track name")
                 .creationTime(Timestamp.from(Instant.now()))
                 .artists(Set.of(artistDbo))
@@ -91,7 +86,6 @@ class TrackDboTest {
         assertEquals(TEST_ID, track.getId());
         assertEquals("Test track name", track.getTitle());
         assertEquals(450, track.getLengthSeconds());
-        assertEquals(3, track.getVersion());
         assertEquals(Set.of(ArtistDbo.toArtist(artistDbo)), track.getArtists());
         assertEquals(GenreDbo.toGenre(genreDbo), track.getGenre());
     }

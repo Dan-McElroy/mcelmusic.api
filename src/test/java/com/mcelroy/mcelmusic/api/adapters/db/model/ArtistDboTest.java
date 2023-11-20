@@ -20,14 +20,12 @@ class ArtistDboTest {
                 .id(TEST_ID)
                 .name("Test artist name")
                 .profilePictureUrl("http://test.com")
-                .version(3)
                 .build();
         var dbo = ArtistDbo.fromArtist(artist);
 
         assertEquals(UUID.fromString(TEST_ID), dbo.getId());
         assertEquals("Test artist name", dbo.getName());
         assertEquals("http://test.com", dbo.getProfilePictureUrl());
-        assertEquals(3, dbo.getVersion());
     }
 
     @Test
@@ -52,7 +50,6 @@ class ArtistDboTest {
 
         var dbo = ArtistDbo.builder()
                 .id(UUID.fromString(TEST_ID))
-                .version(3)
                 .name("Test artist name")
                 .creationTime(Timestamp.from(Instant.now()))
                 .aliases(aliases)
@@ -63,7 +60,6 @@ class ArtistDboTest {
         assertEquals(TEST_ID, artist.getId());
         assertEquals("Test artist name", artist.getName());
         assertEquals("http://test.com", artist.getProfilePictureUrl());
-        assertEquals(3, artist.getVersion());
         assertEquals(Set.of("Alias 1", "Alias 2"), artist.getAliases());
     }
 }

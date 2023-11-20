@@ -62,7 +62,6 @@ public final class TrackDbo implements Identifiable {
     public static TrackDbo fromTrack(Track track) {
         return TrackDbo.builder()
                 .id(track.getId() != null ? UUID.fromString(track.getId()) : null)
-                .version(track.getVersion())
                 .title(track.getTitle())
                 .lengthSeconds(track.getLengthSeconds())
                 .build();
