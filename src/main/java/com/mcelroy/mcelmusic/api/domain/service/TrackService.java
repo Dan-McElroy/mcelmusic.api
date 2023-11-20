@@ -13,14 +13,10 @@ import com.mcelroy.mcelmusic.api.domain.repository.GenreRepository;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuples;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

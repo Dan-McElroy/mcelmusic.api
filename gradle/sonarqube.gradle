@@ -2,7 +2,6 @@ sonarqube {
     properties {
         def sonarToken = "${System.getenv('MCELMUSIC_SONAR_TOKEN')}".toString()
 
-        property "sonar.host.url", "127.0.0.1:9000"
         property "sonar.projectKey", rootProject.name
         property "sonar.projectName", rootProject.name
         property "sonar.projectBaseDir", project.rootDir

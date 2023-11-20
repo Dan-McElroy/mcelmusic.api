@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GenreDboTest {
+class GenreDboTest {
 
     private static final String TEST_ID = "4020910a-a1d0-4a8c-b949-e1483960b1ea";
 

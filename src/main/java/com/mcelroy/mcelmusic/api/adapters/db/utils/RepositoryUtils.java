@@ -1,20 +1,21 @@
 package com.mcelroy.mcelmusic.api.adapters.db.utils;
 
-import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo;
-import com.mcelroy.mcelmusic.api.adapters.db.model.GenreDbo_;
 import com.mcelroy.mcelmusic.api.adapters.db.model.Identifiable;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.converters.uni.UniReactorConverters;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.reactive.mutiny.Mutiny;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.function.Function;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RepositoryUtils {
 
-    public static <T, TDbo extends Identifiable> Mono<T> createOrUpdate(TDbo entity,
-            Mutiny.SessionFactory sessionFactory, Function<TDbo, T> toModel) {
+    public static <M, E extends Identifiable> Mono<M> createOrUpdate(E entity,
+            Mutiny.SessionFactory sessionFactory, Function<E, M> toModel) {
         var saveOperation = (entity.getId() == null)
                 ? sessionFactory.withSession(session ->
                 session.persist(entity)

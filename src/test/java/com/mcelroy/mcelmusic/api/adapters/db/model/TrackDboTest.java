@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TrackDboTest {
+class TrackDboTest {
 
     private static final String TEST_ID = "4020910a-a1d0-4a8c-b949-e1483960b1ea";
     private static final String TEST_ARTIST_ID = "4020910a-a1d0-4a8c-b949-e1483960b1ea";

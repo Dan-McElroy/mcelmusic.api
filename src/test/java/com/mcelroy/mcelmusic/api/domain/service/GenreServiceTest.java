@@ -18,7 +18,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class GenreServiceTest {
+class GenreServiceTest {
 
     private static final String TEST_GENRE_ID = "Test Genre ID";
 
