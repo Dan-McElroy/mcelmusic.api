@@ -5,10 +5,8 @@ import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Track;
 import com.mcelroy.mcelmusic.api.domain.repository.TrackRepository;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.reactive.mutiny.Mutiny;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
@@ -18,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
-@Slf4j
 public class TrackDboRepository implements TrackRepository {
 
     private Mutiny.SessionFactory sessionFactory;
