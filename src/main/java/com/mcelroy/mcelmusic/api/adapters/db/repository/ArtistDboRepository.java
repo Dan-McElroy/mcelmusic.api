@@ -5,6 +5,7 @@ import com.mcelroy.mcelmusic.api.adapters.db.utils.RepositoryUtils;
 import com.mcelroy.mcelmusic.api.domain.model.Artist;
 import com.mcelroy.mcelmusic.api.domain.repository.ArtistRepository;
 import io.smallrye.mutiny.converters.uni.UniReactorConverters;
+import io.smallrye.mutiny.Multi;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.reactive.mutiny.Mutiny;
@@ -44,6 +45,9 @@ public class ArtistDboRepository implements ArtistRepository {
         var artistUuids = artistIds.stream().map(UUID::fromString).toArray();
         return this.sessionFactory.withSession(session ->
                         session.find(ArtistDbo.class, artistUuids)
+                                .onItem().transformToMulti(Multi.createFrom()::iterable)
+                                .onItem().call(artistDbo -> session.fetch(artistDbo.getAliases()))
+                                .collect().asList()
                                 .map(artistDbos -> artistDbos.stream()
                                         .map(ArtistDbo::toArtist)
                                         .collect(Collectors.toSet())))
