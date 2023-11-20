@@ -38,13 +38,14 @@ public final class TrackDbo implements Identifiable {
 
     String title;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "artist_tracks",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "track_id") }
     )
-    Set<ArtistDbo> artists;
+    Set<ArtistDbo> artists = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "genre_id")

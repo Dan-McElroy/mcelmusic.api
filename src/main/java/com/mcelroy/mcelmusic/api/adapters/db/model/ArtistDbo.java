@@ -44,8 +44,9 @@ public class ArtistDbo implements Identifiable {
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     Set<ArtistAliasDbo> aliases = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany(mappedBy = "artists")
-    Set<TrackDbo> tracks;
+    Set<TrackDbo> tracks = new HashSet<>();
 
     /**
      * Converts an {@link Artist} domain model into a DBO, excluding association fields.

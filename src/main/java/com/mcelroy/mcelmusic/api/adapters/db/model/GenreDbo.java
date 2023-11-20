@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,13 +33,14 @@ public class GenreDbo implements Identifiable {
 
     String name;
 
+    @Builder.Default
     @OneToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REFRESH,
     }, mappedBy = "genre")
-    Set<TrackDbo> tracks;
+    Set<TrackDbo> tracks = new HashSet<>();
 
     public static GenreDbo fromGenre(Genre genre) {
         return GenreDbo.builder()
