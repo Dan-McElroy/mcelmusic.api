@@ -1,13 +1,19 @@
 # Decisions & Assumptions
 
 ### Project Scope
-- Backend only
-- Provide public API endpoints for required operations (adding tracks, editing artist name, Artist of the Day etc)
-- Provide additional endpoints for other necessary admin functions (adding artists, editing/deleting tracks)
+
+From the provided requirements I decided to product a backend solution only - the requirements make mention of a
+homepage, but this could be developed separately as a client of this API.
+
+The API provides a REST interface, with Create, Read, Update and Delete operations for tracks, artists and genres.
 
 ### Tech Stack
-- Spring Boot Webflux application providing a REST API
-- Backed by a PostgresQL DB via Hibernate Reactive with Flyway migrations
+
+As the only purely technical requirement was to use a JVM language, I settled on a Java Spring Boot WebFlux API,
+drawing on my recent experience and my preference for reactive programming.
+
+The backing database is a PostgreSQL instance, primarily managed via Hibernate Reactive with migrations controlled by
+Flyway. For local development, this database was deployed as a `postgres` Docker container via Docker Compose .
 
 ### Limitations
 - Setting up testing environments/branching policies
@@ -21,13 +27,27 @@
 - Parameter checks and failures in data model
 - No current security configuration, app is totally open
 - Not very intuitive/dev-friendly setup between domain models and dbos
+- No albums
+- No soft delete
 
 ### Artist of the Day Implementation
-- Index on/order by artist creation time
-- Get days since Instant EPOCH, mod by number of artist records and retrieve 1 artist at that index
-- Implemented with two separate sessions, one per query (count and then select/order-by), which isn't ideal but also it
-made sense to keep logic in service
-  - Also count() could potentially be re-used in future
+
+The goals of "Artist of the Day" are to provide a consistent Artist result for each request that rotates through
+all Artists in the store, once per day.
+
+To achieve this, we take the following steps:
+- Find the number of days since the time of the user's request and a fixed date in history
+(currently using the "Unix Epoch", aka. January 1st 1970)
+- Find the number of artists currently in the database, and use a [modulo](https://en.wikipedia.org/wiki/Modulo)
+operation to get a usable index _N_ for our daily Artist (expressed as `daysSinceEpoch % numberOfArtists`)
+- Order the artist table by its `creation_time` property (as a non-optional, immutable and easily comparable value,
+which has been indexed for optimisation purposes)
+- Retrieve the _Nth_ artist from the ordered table.
+
+One slight limitation of this approach from a performance perspective is that it currently uses two separate database
+sessions, one to retrieve the number of artists and another to retrieve the Nth artist, but this allows us to keep the
+business logic in the service layer of the application and out of the low-level database access code without serious
+refactoring.
 
 ### Architecture
 - Onion!
