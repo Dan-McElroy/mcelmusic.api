@@ -38,14 +38,13 @@ public final class TrackDbo implements Identifiable {
 
     String title;
 
-    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "artist_tracks",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "track_id") }
     )
-    Set<ArtistDbo> artists = new HashSet<>();
+    Set<ArtistDbo> artists;
 
     @ManyToOne
     @JoinColumn(name = "genre_id")
@@ -79,13 +78,16 @@ public final class TrackDbo implements Identifiable {
         var genre = trackDbo.getGenre() != null
                 ? GenreDbo.toGenre(trackDbo.getGenre())
                 : null;
+        var artists = trackDbo.getArtists()
+                .stream().map(ArtistDbo::toArtist)
+                .collect(Collectors.toSet());
         return Track.builder()
                 .id(trackDbo.getId().toString())
                 .version(trackDbo.getVersion())
                 .title(trackDbo.getTitle())
                 .lengthSeconds(trackDbo.getLengthSeconds())
                 .genre(genre)
-                .artists(trackDbo.artists.stream().map(ArtistDbo::toArtist).collect(Collectors.toSet()))
+                .artists(artists)
                 .build();
     }
 }

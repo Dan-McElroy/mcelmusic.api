@@ -34,6 +34,7 @@ public class ArtistDboRepository implements ArtistRepository {
     public Mono<Artist> findById(@NonNull String artistId) {
         var findOperation = this.sessionFactory.withSession(session ->
                 session.find(ArtistDbo.class, UUID.fromString(artistId))
+                        .onItem()
                         .call(artist -> session.fetch(artist.getAliases()))
                         .map(ArtistDbo::toArtist));
         return RepositoryUtils.convert(findOperation);
