@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 /**
@@ -24,8 +25,9 @@ public class ArtistController {
 
     @GetMapping("today")
     public Mono<Artist> getArtistOfTheDay(ServerWebExchange exchange) {
-        return exchange.getSession().flatMap(
-                session -> artistService.getArtistOfTheDay(session.getLastAccessTime()));
+        return exchange.getSession()
+                .map(WebSession::getLastAccessTime)
+                .flatMap(artistService::getArtistOfTheDay);
     }
 
     @GetMapping("{artistId}")
