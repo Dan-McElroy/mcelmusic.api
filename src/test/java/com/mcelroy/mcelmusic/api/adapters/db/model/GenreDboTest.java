@@ -18,13 +18,11 @@ class GenreDboTest {
         var genre = Genre.builder()
                 .id(TEST_ID)
                 .name("Test genre name")
-                .version(3)
                 .build();
         var dbo = GenreDbo.fromGenre(genre);
 
         assertEquals(UUID.fromString(TEST_ID), dbo.getId());
         assertEquals("Test genre name", dbo.getName());
-        assertEquals(3, dbo.getVersion());
     }
 
     @Test
@@ -32,14 +30,12 @@ class GenreDboTest {
 
         var dbo = GenreDbo.builder()
                 .id(UUID.fromString(TEST_ID))
-                .version(3)
                 .name("Test genre name")
-                .creationTime(Timestamp.from(Instant.now()))
+                .creationTime(Instant.now())
                 .build();
         var genre = GenreDbo.toGenre(dbo);
 
         assertEquals(TEST_ID, genre.getId());
         assertEquals("Test genre name", genre.getName());
-        assertEquals(3, genre.getVersion());
     }
 }
