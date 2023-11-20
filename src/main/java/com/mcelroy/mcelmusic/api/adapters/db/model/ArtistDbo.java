@@ -27,6 +27,7 @@ public class ArtistDbo implements Identifiable {
     UUID id;
 
     @Builder.Default
+    @Version
     int version = 1;
 
     @Column(name = "name")
@@ -41,11 +42,11 @@ public class ArtistDbo implements Identifiable {
     Timestamp creationTime = Timestamp.from(Instant.now());
 
     @Builder.Default
-    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     Set<ArtistAliasDbo> aliases = new HashSet<>();
 
     @Builder.Default
-    @ManyToMany(mappedBy = "artists")
+    @ManyToMany(mappedBy = "artists", cascade = CascadeType.PERSIST)
     Set<TrackDbo> tracks = new HashSet<>();
 
     /**
@@ -55,7 +56,6 @@ public class ArtistDbo implements Identifiable {
     public static ArtistDbo fromArtist(Artist artist) {
         return ArtistDbo.builder()
                 .id(artist.getId() != null ? UUID.fromString(artist.getId()) : null)
-                .version(artist.getVersion())
                 .name(artist.getName())
                 .profilePictureUrl(artist.getProfilePictureUrl())
                 .build();

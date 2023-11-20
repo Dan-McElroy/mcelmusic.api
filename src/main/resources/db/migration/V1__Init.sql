@@ -3,7 +3,7 @@ CREATE EXTENSION if not exists "uuid-ossp";
 CREATE TABLE if not exists artist (
     id uuid default uuid_generate_v4() primary key,
     version integer default 1,
-    creation_time timestamp without time zone default now(),
+    creation_time timestamp without time zone default now()::timestamp not null,
     name varchar(255),
     profile_picture_url varchar(255)
 );
@@ -19,14 +19,14 @@ CREATE TABLE if not exists artist_alias (
 CREATE TABLE if not exists genre (
     id uuid default uuid_generate_v4() primary key,
     version integer default 1,
-    creation_time timestamp without time zone default now(),
+    creation_time timestamp without time zone default now()::timestamp not null,
     name varchar(255)
 );
 
 CREATE TABLE if not exists track (
     id uuid default uuid_generate_v4() primary key,
     version integer default 1,
-    creation_time timestamp without time zone default now(),
+    creation_time timestamp without time zone default now()::timestamp not null,
     title varchar(255),
     genre_id uuid,
     length_seconds integer check (length_seconds > 0),

@@ -17,12 +17,7 @@ public class ArtistAliasDbo implements Identifiable {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-    @ManyToOne(cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH,
-    })
+    @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
     private ArtistDbo artist;
 

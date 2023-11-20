@@ -39,15 +39,15 @@ public final class TrackDbo implements Identifiable {
     String title;
 
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "artist_tracks",
-            joinColumns = { @JoinColumn(name = "artist_id") },
-            inverseJoinColumns = { @JoinColumn(name = "track_id") }
+            joinColumns = { @JoinColumn(name = "track_id") },
+            inverseJoinColumns = { @JoinColumn(name = "artist_id") }
     )
     Set<ArtistDbo> artists = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "genre_id")
     GenreDbo genre;
 

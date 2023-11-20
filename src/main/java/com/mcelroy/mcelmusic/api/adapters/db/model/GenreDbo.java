@@ -4,6 +4,7 @@ import com.mcelroy.mcelmusic.api.domain.model.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -26,10 +27,9 @@ public class GenreDbo implements Identifiable {
     @Version
     int version;
 
-    @Builder.Default
-    @Column(name = "creation_time")
-    @CreationTimestamp
-    Timestamp creationTime = Timestamp.from(Instant.now());
+    @Column(name = "creation_time", insertable = false)
+    @CreationTimestamp(source = SourceType.DB)
+    Instant creationTime;
 
     String name;
 
