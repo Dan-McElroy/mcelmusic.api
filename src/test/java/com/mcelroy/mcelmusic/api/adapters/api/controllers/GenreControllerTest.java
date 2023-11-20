@@ -47,7 +47,7 @@ class GenreControllerTest {
                 .willReturn(Mono.just(expectedGenre));
 
         client.put()
-                .uri("/genre")
+                .uri("/v1/genre")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(genreCreationParams)
@@ -67,7 +67,7 @@ class GenreControllerTest {
                 .willReturn(Mono.error(InvalidParametersException.genre("name")));
 
         client.put()
-                .uri("/genre")
+                .uri("/v1/genre")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(genreCreationParams)
@@ -88,7 +88,7 @@ class GenreControllerTest {
                 .willReturn(Mono.just(expectedGenre));
 
         client.get()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -103,7 +103,7 @@ class GenreControllerTest {
                 .willReturn(Mono.error(NotFoundException.genre()));
 
         client.get()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -127,7 +127,7 @@ class GenreControllerTest {
                 .willReturn(Mono.just(expectedGenre));
 
         client.patch()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -149,7 +149,7 @@ class GenreControllerTest {
                 .willReturn(Mono.error(NotFoundException.genre()));
 
         client.patch()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -169,7 +169,7 @@ class GenreControllerTest {
                 .willReturn(Mono.error(VersionConflictException.genre()));
 
         client.patch()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -185,7 +185,7 @@ class GenreControllerTest {
                 .willReturn(Mono.empty());
 
         client.delete()
-                .uri("/genre/" + TEST_GENRE_ID)
+                .uri("/v1/genre/" + TEST_GENRE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()

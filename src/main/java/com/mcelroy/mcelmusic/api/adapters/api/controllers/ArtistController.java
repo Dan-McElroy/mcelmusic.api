@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/artist")
+@RequestMapping("/v1/artist")
 public class ArtistController {
 
     private final ArtistService artistService;

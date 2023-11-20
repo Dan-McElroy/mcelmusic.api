@@ -6,7 +6,7 @@ info:
   description: Music Metadata Service for ICE Services application
 
 paths:
-  /track/{trackId}:
+  /v1/track/{trackId}:
     parameters:
       - in: path
         name: trackId
@@ -86,7 +86,7 @@ paths:
           description: Track deleted successfully
         '400':
           description: Invalid track ID.
-  /track:
+  /v1/track:
     put:
       tags:
         - Tracks
@@ -129,7 +129,7 @@ paths:
                 $ref: '#/components/schemas/Track'
         '400':
           description: Invalid parameters
-  /artist/{artistId}:
+  /v1/artist/{artistId}:
     parameters:
       - in: path
         name: artistId
@@ -203,7 +203,7 @@ paths:
           description: Artist deleted successfully
         '400':
           description: Invalid track ID.
-  /artist:
+  /v1/artist:
     put:
       tags:
         - Artists
@@ -242,7 +242,7 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '400':
           description: Invalid parameters
-  /artist/today:
+  /v1/artist/today:
     get:
       tags:
         - Artists
@@ -257,7 +257,7 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '404':
           description: No artists found in the metadata service
-  /genre/{genreId}:
+  /v1/genre/{genreId}:
     parameters:
       - in: path
         name: genreId
@@ -326,7 +326,7 @@ paths:
           description: Genre deleted successfully
         '400':
           description: Invalid track ID.
-  /genre:
+  /v1/genre:
     put:
       tags:
         - Genres

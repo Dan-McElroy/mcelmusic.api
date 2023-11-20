@@ -61,7 +61,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.just(expectedArtist));
 
         client.put()
-                .uri("/artist")
+                .uri("/v1/artist")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(artistCreationParams)
@@ -83,7 +83,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.error(InvalidParametersException.artist("name")));
 
         client.put()
-                .uri("/artist")
+                .uri("/v1/artist")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(artistCreationParams)
@@ -106,7 +106,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.just(expectedArtist));
 
         client.get()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -121,7 +121,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.error(NotFoundException.artist()));
 
         client.get()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -147,7 +147,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.just(expectedArtist));
 
         client.patch()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -169,7 +169,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.error(NotFoundException.artist()));
 
         client.patch()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -189,7 +189,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.error(VersionConflictException.artist()));
 
         client.patch()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -212,7 +212,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.just(expectedArtist));
 
         client.get()
-                .uri("/artist/today")
+                .uri("/v1/artist/today")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -227,7 +227,7 @@ class ArtistControllerTest {
                 .willReturn(Mono.empty());
 
         client.delete()
-                .uri("/artist/" + TEST_ARTIST_ID)
+                .uri("/v1/artist/" + TEST_ARTIST_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()

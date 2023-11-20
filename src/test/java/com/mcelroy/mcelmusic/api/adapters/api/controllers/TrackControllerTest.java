@@ -69,7 +69,7 @@ class TrackControllerTest {
                  .willReturn(Mono.just(expectedTrack));
 
         client.put()
-                 .uri("/track")
+                 .uri("/v1/track")
                  .accept(MediaType.APPLICATION_JSON)
                  .contentType(MediaType.APPLICATION_JSON)
                  .bodyValue(trackCreationParams)
@@ -92,7 +92,7 @@ class TrackControllerTest {
                 .willReturn(Mono.error(InvalidParametersException.track("artists")));
 
         client.put()
-                .uri("/track")
+                .uri("/v1/track")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(trackCreationParams)
@@ -116,7 +116,7 @@ class TrackControllerTest {
                 .willReturn(Mono.just(expectedTrack));
 
         client.get()
-                .uri("/track/ExistingID")
+                .uri("/v1/track/ExistingID")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -131,7 +131,7 @@ class TrackControllerTest {
                 .willReturn(Mono.error(NotFoundException.track()));
 
         client.get()
-                .uri("/track/NonExistingID")
+                .uri("/v1/track/NonExistingID")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -159,7 +159,7 @@ class TrackControllerTest {
                 .willReturn(Mono.just(expectedTrack));
 
         client.patch()
-                .uri("/track/UpdateID")
+                .uri("/v1/track/UpdateID")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -182,7 +182,7 @@ class TrackControllerTest {
                 .willReturn(Mono.error(NotFoundException.track()));
 
         client.patch()
-                .uri("/track/NonExistingID")
+                .uri("/v1/track/NonExistingID")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -203,7 +203,7 @@ class TrackControllerTest {
                 .willReturn(Mono.error(VersionConflictException.track()));
 
         client.patch()
-                .uri("/track/UpdateID")
+                .uri("/v1/track/UpdateID")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateParameters)
@@ -219,7 +219,7 @@ class TrackControllerTest {
                 .willReturn(Mono.empty());
 
         client.delete()
-                .uri("/track/ToBeDeletedID")
+                .uri("/v1/track/ToBeDeletedID")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()

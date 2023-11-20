@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/genre")
+@RequestMapping("/v2/genre")
 public class GenreController {
 
     private final GenreService genreService;
