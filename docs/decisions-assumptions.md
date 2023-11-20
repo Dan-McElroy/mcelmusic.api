@@ -19,7 +19,7 @@
   - When creating a track with bad/non-existing artist IDs, bad entries will be ignored
   - Existing error handling feels overengineered, unmaintainable
 - Parameter checks and failures in data model
-- No time for Postman collection
+- No current security configuration, app is totally open
 - Not very intuitive/dev-friendly setup between domain models and dbos
 
 ### Artist of the Day Implementation
@@ -36,6 +36,9 @@ made sense to keep logic in service
   - /track PUT
 
 ### Data Model
+
+![An Entity-Relationship Diagram of the service's data model](docs%2Fentity-relationship-diagram.svg)
+
 - Genre Objects with IDs
   - Simple right now (just name) but have made create/update DTOs to allow room for it to get more complex in the future
   - (Examples of this?)

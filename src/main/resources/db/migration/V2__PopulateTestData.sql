@@ -9,14 +9,14 @@ VALUES ('4020910a-a1d0-4a8c-b949-e1483960b1ea', 'Larry Heard', 'https://i.scdn.c
 INSERT INTO artist (id, name, profile_picture_url)
 VALUES ('0ca17799-ef55-495b-85e1-a75a1eaf1e52', 'Burial', 'https://i.scdn.co/image/ab676161000051744be7334b7aed9ca32a732aeb');
 
-INSERT INTO artist_alias (artist_id, alias)
-VALUES ('54a1f1ee-0210-419e-9610-667ecc9e3a5a', 'KH');
+INSERT INTO artist_alias (id, artist_id, alias)
+VALUES ('0ed74ccf-e369-44de-8828-bc37ff1e2212', '54a1f1ee-0210-419e-9610-667ecc9e3a5a', 'KH');
 
-INSERT INTO artist_alias (artist_id, alias)
-VALUES ('54a1f1ee-0210-419e-9610-667ecc9e3a5a', '⣎⡇ꉺლ༽இ•̛)ྀ◞ ༎ຶ ༽ৣৢ؞ৢ؞ؖ ꉺლ');
+INSERT INTO artist_alias (id, artist_id, alias)
+VALUES ('f59ccd4e-fc5c-4f62-8964-d5b6e609bfb3', '54a1f1ee-0210-419e-9610-667ecc9e3a5a', '⣎⡇ꉺლ༽இ•̛)ྀ◞ ༎ຶ ༽ৣৢ؞ৢ؞ؖ ꉺლ');
 
-INSERT INTO artist_alias (artist_id, alias)
-VALUES ('4020910a-a1d0-4a8c-b949-e1483960b1ea', 'Mr. Fingers');
+INSERT INTO artist_alias (id, artist_id, alias)
+VALUES ('5e6b6722-6269-4bae-8064-178c1cfa1479', '4020910a-a1d0-4a8c-b949-e1483960b1ea', 'Mr. Fingers');
 
 INSERT INTO genre (id, name)
 VALUES ('fb1da549-7e39-4286-b5fb-367e875ecb50', 'Deep House');
