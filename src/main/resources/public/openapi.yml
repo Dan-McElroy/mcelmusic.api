@@ -105,19 +105,21 @@ paths:
               properties:
                 title:
                   type: string
-                  example: Breathe (In The Air)
-                artists:
+                  example: Archangel
+                artistIds:
                   type: array
                   items:
                     type: string
                     format: uuid
+                  example: [3fa85f64-5717-4562-b3fc-2c963f66afa6]
                 genreId:
                   type: string
                   format: uuid
+                  example: fb1da549-7e39-4286-b5fb-367e875ecb50
                 lengthSeconds:
                   type: integer
                   minimum: 1
-                  example: 169
+                  example: 240
       responses:
         '200':
           description: Track created successfully
@@ -225,6 +227,7 @@ paths:
                   description: A list of aliases the artist is known by.
                   items:
                     type: string
+                  example: ['Roger Waters', 'David Gilmour']
                 profilePictureUrl:
                   type: string
                   description: The location of the artist's profile picture.
@@ -260,6 +263,7 @@ paths:
         name: genreId
         description: The ID of the genre, which must already exist.
         required: true
+        example: fb1da549-7e39-4286-b5fb-367e875ecb50
         schema:
           type: string
           format: uuid
@@ -377,11 +381,9 @@ components:
         artists:
           type: array
           items:
-            type: string
-            format: uuid
-        genreId:
-          type: string
-          format: uuid
+            $ref: '#/components/schemas/Artist'
+        genre:
+          $ref: '#/components/schemas/Genre'
         lengthSeconds:
           type: integer
           minimum: 1
