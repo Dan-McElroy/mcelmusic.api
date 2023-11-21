@@ -61,7 +61,6 @@ public class TrackService {
                         getUpdatedGenre(update, track).map(genre ->
                             track.toBuilder()
                             .id(track.getId())
-                            .version(track.getVersion() + 1)
                             .title(update.title() != null ? update.title() : track.getTitle())
                             .genre(genre)
                             .lengthSeconds(update.lengthSeconds() != null

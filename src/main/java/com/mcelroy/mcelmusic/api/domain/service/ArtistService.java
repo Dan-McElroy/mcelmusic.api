@@ -46,7 +46,6 @@ public class ArtistService {
                 .switchIfEmpty(Mono.error(VersionConflictException.artist()))
                 .map(artist ->
                         artist.toBuilder()
-                        .version(artist.getVersion() + 1)
                         .name(update.name() != null ? update.name() : artist.getName())
                         .aliases(update.aliases() != null
                                 ? update.aliases()

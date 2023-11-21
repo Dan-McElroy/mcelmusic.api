@@ -161,7 +161,7 @@ class TrackServiceTest {
                 .artists(Set.of(TEST_ARTIST_1, TEST_ARTIST_2))
                 .lengthSeconds(60)
                 .genre(TEST_GENRE)
-                .version(3)
+                .version(2)
                 .build();
 
         given(trackRepository.findById(TEST_TRACK_ID))
