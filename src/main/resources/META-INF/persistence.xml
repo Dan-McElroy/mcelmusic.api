@@ -15,11 +15,11 @@
 
             <!-- PostgreSQL -->
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:postgresql://localhost:5432/mydatabase"/>
+                      value="jdbc:postgresql://localhost:5432/music_metadata"/>
 
             <!-- Credentials -->
             <property name="jakarta.persistence.jdbc.user"
-                      value="myuser"/>
+                      value="api_user"/>
             <property name="jakarta.persistence.jdbc.password"
                       value="secret"/>
 

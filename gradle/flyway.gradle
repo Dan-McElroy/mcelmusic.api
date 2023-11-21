@@ -1,5 +1,5 @@
 flyway {
-    url = 'jdbc:postgresql://127.0.0.0:5432/mydatabase'
-    user = 'myuser'
+    url = 'jdbc:postgresql://127.0.0.0:5432/music_metadata'
+    user = 'api_user'
     password = 'secret'
 }
