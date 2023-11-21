@@ -2,6 +2,8 @@
 
 #### Author: Dan McElroy
 
+![ci workflow](https://github.com/Dan-McElroy/mcelmusic.api/actions/workflows/ci.yml/badge.svg)
+
 This application is designed to provide a REST API for a music metadata service that allows users to access and modify
 information related to musical artists and their tracks. 
 
