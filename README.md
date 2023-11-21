@@ -9,7 +9,8 @@ information related to musical artists and their tracks.
 
 ### How to Run
 
-This application should be run in an environment with [Java 17], [Docker] and [Docker Compose] installed.
+This application should be run in an environment with [Java 17](https://openjdk.org/projects/jdk/17/), 
+[Docker](https://www.docker.com/) and [Docker Compose](https://github.com/docker/compose) installed.
 
 Once these requirements have been met, ensure that Docker is running and then run `./gradlew bootJar` from
 the repository's root directory.
@@ -22,6 +23,14 @@ This will deploy a PostgreSQL container, launch the application and seed the dat
 All actions are performed via HTTP requests on [http://localhost:8080](http:localhost:8080), and the documentation for 
 this API can be found at [http:localhost:8080/docs.html](http:localhost:8080/docs.html) or in YAML format
 [here](src/main/resources/public/openapi.yml).
+
+### How to Develop
+
+This application was developed in IntelliJ IDEA, but should be compatible with any other code platform of choice. The
+repository contains a `compose.yaml` file which will create a local container for both a PostgreSQL server and a
+Sonarqube server that can be interacted with via the 
+[Sonar Gradle plugin](https://redirect.sonarsource.com/doc/gradle.html) and is also configured to work with JaCoCo to
+provide test coverage analysis.
 
 ### Sample Data
 

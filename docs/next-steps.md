@@ -4,7 +4,7 @@
 #### Last updated: 20th November 2023
 
 At time of writing, the project is mid-development pending some critical issues with the data access layer (see 
-[here](decisions-assumptions.md#data-access-issues)) and as such cannot be considered to be "production-ready".
+[here](current-issues.md) for details) and as such cannot be considered to be "production-ready".
 With that in mind, here are the next steps I would consider to prepare this application for use in production 
 (**assuming that existing issues with data access have been resolved**):
 
@@ -26,7 +26,7 @@ specified per-environment.
 - Set up a cloud container service such as Amazon ECS or Azure Container Apps and create a GitHub Action to deploy to
 said service on every merge to a `release/*` branch.
   - With more time and resources, set up an identical staging environment which is deployed to on every merge to the 
-  `master` branch. 
+  `master` branch.
 
 ### Add Authentication & Authorization
 Currently, the application is not secured, so every user is freely able to manipulate all music metadata. I would make
@@ -38,6 +38,21 @@ the following first steps to avoid this:
 developers in testing the API
 
 ### Reworking the API
-The API currently gives users access to interact with tracks, genres and artists. 
-
-### App Functionality
+The API currently gives users identical ways to access functionality for tracks, genres and artists (with the exception
+of Artist of the Day). This can lead to a slightly clunky integration process for any integrating client, particularly
+around reading and updating data. I would add the following additional endpoints:
+- `/v1/artist/<id>/aliases`
+  - `GET`: get a list of artist aliases, separate from the base Artist object
+  - `PUT`: add an alias to an artist
+  - `DELETE` (with `name` as query parameter): remove an alias from an artist by name
+- `/v1/artist/<id>/tracks`
+  - `GET`: return a list of tracks by the artist. It would be fairly important to add a pagination parameter like 
+  `offset` here to keep request sizes under control, and it could also be extended with other standard query parameters
+  like filtering and ordering.
+- `v1/genre/<id>/tracks`
+  - `GET`: see the above details for `artist/<id>/tracks`, but returning all the tracks belonging to a particular genre.
+- `v1/track/<id>/artists`
+  - `GET`: get a list of artists responsible for a particular track, separate from the full Track object.
+  - `PUT`: add a contributing artist to a track.
+- `v1/track/<id>artists/<artist_id>`
+  - `DELETE`: remove a contributing artist from a track.

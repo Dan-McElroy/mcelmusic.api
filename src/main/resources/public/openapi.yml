@@ -30,6 +30,10 @@ paths:
                 $ref: '#/components/schemas/Track'
         '404':
           description: Track not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     patch:
       tags:
         - Tracks
@@ -73,8 +77,16 @@ paths:
                 $ref: '#/components/schemas/Track'
         '404':
           description: Track not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
           description: Track version conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Tracks
@@ -86,6 +98,10 @@ paths:
           description: Track deleted successfully
         '400':
           description: Invalid track ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/track:
     put:
       tags:
@@ -129,6 +145,10 @@ paths:
                 $ref: '#/components/schemas/Track'
         '400':
           description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/artist/{artistId}:
     parameters:
       - in: path
@@ -153,6 +173,10 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '404':
           description: Artist not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     patch:
       tags:
         - Artists
@@ -190,8 +214,16 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '404':
           description: Artist not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
           description: Artist version conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Artists
@@ -203,6 +235,10 @@ paths:
           description: Artist deleted successfully
         '400':
           description: Invalid track ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/artist:
     put:
       tags:
@@ -242,6 +278,10 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '400':
           description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/artist/today:
     get:
       tags:
@@ -257,6 +297,10 @@ paths:
                 $ref: '#/components/schemas/Artist'
         '404':
           description: No artists found in the metadata service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/genre/{genreId}:
     parameters:
       - in: path
@@ -281,6 +325,10 @@ paths:
                 $ref: '#/components/schemas/Genre'
         '404':
           description: Genre not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     patch:
       tags:
         - Genres
@@ -313,8 +361,16 @@ paths:
                 $ref: '#/components/schemas/Genre'
         '404':
           description: Genre not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '409':
           description: Genre version conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Genres
@@ -326,6 +382,10 @@ paths:
           description: Genre deleted successfully
         '400':
           description: Invalid track ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /v1/genre:
     put:
       tags:
@@ -354,6 +414,10 @@ paths:
                 $ref: '#/components/schemas/Genre'
         '400':
           description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
@@ -371,6 +435,9 @@ components:
           type: string
           format: uuid
           example: 8f89510a-1c28-44d5-87ad-1ca2121d9374
+        creationTime:
+          type: string
+          format: timestamp
         version:
           type: integer
           description: The latest known version of the track record. Used to
@@ -399,6 +466,9 @@ components:
           type: string
           format: uuid
           example: db756ca1-5b1f-46ac-873a-743ec75afa0b
+        creationTime:
+          type: string
+          format: timestamp
         version:
           type: integer
           minimum: 1
@@ -432,6 +502,9 @@ components:
           type: string
           format: uuid
           example: 99c4dd05-083d-40c5-acaa-e80ffe228a6d
+        creationTime:
+          type: string
+          format: timestamp
         version:
           type: integer
           minimum: 1
@@ -441,3 +514,18 @@ components:
           type: string
           description: The name of the genre.
           example: Soul
+    Error:
+      type: object
+      required:
+        - timeOccurred
+        - failureReason
+      properties:
+        timeOccurred:
+          type: string
+          format: timezone
+        failureReason:
+          type: string
+          description: A brief summary of the cause of the error.
+        details:
+          type: object
+          description: Error-specific information.
